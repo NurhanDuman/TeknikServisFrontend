@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Servis Kayıtları – ServisTakip</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+
+    .action-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    /* ── Kategori bilgi notu ── */
+    .kategori-hint {
+      grid-column: 1 / -1;
+      background: rgba(245,158,11,0.07);
+      border: 1.5px solid rgba(245,158,11,0.25);
+      border-radius: var(--radius-sm);
+      padding: 9px 14px;
+      font-size: 12.5px;
+      color: #92400e;
+      display: none;
+    }
+    .kategori-hint.goster { display: block; }
+
+    /* ── Cihaz türü disabled görünümü ── */
+    select:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--bg-white);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 580px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+      animation: modalIn 0.22s ease;
+      max-height: 92vh;
+      overflow-y: auto;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(18px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal-header {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; background: var(--bg-white); z-index: 1;
+    }
+    .modal-header h2 { font-size: 16px; font-weight: 700; color: var(--text-dark); }
+
+    .modal-close {
+      background: none; border: none; cursor: pointer;
+      color: var(--text-muted); font-size: 22px; line-height: 1;
+      padding: 2px 6px; border-radius: 4px; transition: background 0.15s;
+    }
+    .modal-close:hover { background: var(--border-color); }
+
+    .modal-body {
+      padding: 22px 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px 18px;
+    }
+    .modal-body .full-width { grid-column: 1 / -1; }
+
+    /* ── Bölüm ayırıcı ── */
+    .form-divider {
+      grid-column: 1 / -1;
+      border: none;
+      border-top: 1px solid var(--border-color);
+      margin: 4px 0;
+    }
+
+    .form-section-title {
+      grid-column: 1 / -1;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    /* ── Form ── */
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+
+    .form-group label {
+      font-size: 12px; font-weight: 600; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 9px 13px;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      font-size: 13.5px; font-family: 'Inter', sans-serif;
+      color: var(--text-dark); background: #f8fafc;
+      outline: none; transition: border-color 0.2s, background 0.2s;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent-blue); background: var(--bg-white);
+    }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+
+    /* ── Personel bilgi kutusu ── */
+    .personel-bilgi {
+      grid-column: 1 / -1;
+      background: rgba(59,130,246,0.06);
+      border: 1.5px solid rgba(59,130,246,0.2);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .personel-bilgi.bos {
+      background: #f8fafc;
+      border-color: var(--border-color);
+    }
+    .personel-bilgi-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--accent-blue); color: #fff;
+      font-size: 13px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .personel-bilgi.bos .personel-bilgi-avatar {
+      background: var(--border-color); color: var(--text-muted);
+    }
+    .personel-bilgi-text { display: flex; flex-direction: column; gap: 2px; }
+    .personel-bilgi-text span:first-child { font-size: 13px; font-weight: 700; color: var(--text-dark); }
+    .personel-bilgi-text span:last-child  { font-size: 12px; color: var(--text-muted); }
+
+    /* ── Malzeme ── */
+    .malzeme-section { grid-column: 1 / -1; }
+    .malzeme-section > label {
+      font-size: 12px; font-weight: 600; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.5px;
+      display: block; margin-bottom: 8px;
+    }
+    .malzeme-row {
+      display: grid; grid-template-columns: 1fr 90px 36px;
+      gap: 8px; margin-bottom: 8px; align-items: center;
+    }
+    .malzeme-row input {
+      padding: 9px 13px; border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-sm); font-size: 13.5px;
+      font-family: 'Inter', sans-serif; color: var(--text-dark);
+      background: #f8fafc; outline: none;
+      transition: border-color 0.2s, background 0.2s; width: 100%;
+    }
+    .malzeme-row input:focus { border-color: var(--accent-blue); background: var(--bg-white); }
+    .malzeme-remove {
+      background: none; border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-sm); width: 36px; height: 36px;
+      cursor: pointer; color: var(--red); font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s; flex-shrink: 0;
+    }
+    .malzeme-remove:hover { background: rgba(239,68,68,0.08); border-color: var(--red); }
+    .btn-add-malzeme {
+      background: none; border: 1.5px dashed var(--accent-blue);
+      border-radius: var(--radius-sm); color: var(--accent-blue);
+      font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif;
+      padding: 8px 14px; cursor: pointer; width: 100%;
+      transition: background 0.15s; margin-top: 2px;
+    }
+    .btn-add-malzeme:hover { background: rgba(59,130,246,0.06); }
+
+    .modal-footer {
+      padding: 16px 24px; border-top: 1px solid var(--border-color);
+      display: flex; justify-content: flex-end; gap: 10px;
+      position: sticky; bottom: 0; background: var(--bg-white);
+    }
+
+    /* ── Tabloda malzeme etiketi ── */
+    .malzeme-tag {
+      display: inline-block; background: rgba(139,92,246,0.10);
+      color: #6d28d9; border-radius: 20px;
+      font-size: 12px; font-weight: 600;
+      padding: 3px 9px; margin: 2px 2px 2px 0;
+    }
+
+    /* ── Tabloda kategori etiketi ── */
+    .kategori-tag {
+      display: inline-block; background: rgba(59,130,246,0.08);
+      color: #1d4ed8; border-radius: 20px;
+      font-size: 11px; font-weight: 600;
+      padding: 2px 8px; margin-bottom: 3px;
+    }
+
+    /* ── Tablo butonları ── */
+    .tbl-btn {
+      background: none; border: none; cursor: pointer;
+      padding: 5px 7px; border-radius: var(--radius-sm);
+      color: var(--text-muted); transition: background 0.15s, color 0.15s;
+      font-size: 13px;
+    }
+    .tbl-btn:hover        { background: var(--border-color); color: var(--text-dark); }
+    .tbl-btn.edit:hover   { color: var(--accent-blue); }
+    .tbl-btn.delete:hover { color: var(--red); }
+
+    /* ── İşi Al butonu ── */
+    .btn-isi-al {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: none; border: 1.5px solid #10b981;
+      border-radius: var(--radius-sm); color: #047857;
+      font-size: 12px; font-weight: 600; font-family: 'Inter', sans-serif;
+      padding: 4px 10px; cursor: pointer;
+      transition: background 0.15s; white-space: nowrap;
+    }
+    .btn-isi-al:hover { background: rgba(16,185,129,0.1); }
+
+    tr.devam-ediyor { background: rgba(59,130,246,0.03); }
+
+    /* ── Sayfalama ── */
+    .pagination {
+      display: flex; align-items: center;
+      justify-content: flex-end; gap: 6px; margin-top: 16px;
+    }
+    .page-btn {
+      min-width: 34px; height: 34px; border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border-color); background: var(--bg-white);
+      font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer;
+      display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+    }
+    .page-btn:hover  { border-color: var(--accent-blue); color: var(--accent-blue); }
+    .page-btn.active { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
+
+    .empty-row td {
+      text-align: center; padding: 40px !important;
+      color: var(--text-muted); font-size: 13px;
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 28px; right: 28px;
+      background: #1e293b; color: #fff;
+      padding: 12px 20px; border-radius: 10px;
+      font-size: 13px; font-weight: 600;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+      z-index: 999; display: flex; align-items: center; gap: 8px;
+      opacity: 0; transform: translateY(10px);
+      transition: opacity 0.2s, transform 0.2s; pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.green { border-left: 4px solid #10b981; }
+  </style>
+</head>
+<body>
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <h2><span>Servis</span>Takip</h2>
+    </div>
+    <p class="sidebar-menu-label">Ana Menü</p>
+    <ul class="sidebar-menu">
+      <li>
+        <a href="index.html">
+          <svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7" rx="1"/>
+            <rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/>
+            <rect x="14" y="14" width="7" height="7" rx="1"/>
+          </svg>
+          Dashboard
+        </a>
+      </li>
+      <li class="active">
+        <a href="servis-kayitlari.html">
+          <svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+            <rect x="9" y="3" width="6" height="4" rx="1"/>
+            <path d="M9 12h6M9 16h4"/>
+          </svg>
+          Servis Kayıtları
+        </a>
+      </li>
+      <li>
+        <a href="randevular.html">
+          <svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <path d="M16 2v4M8 2v4M3 10h18"/>
+          </svg>
+          Randevular
+        </a>
+      </li>
+    </ul>
+    <div class="sidebar-footer">v1.0.0 © 2026</div>
+  </aside>
+
+  <!-- ===== ANA İÇERİK ===== -->
+  <div class="main-wrapper">
+    <nav class="navbar">
+      <span class="navbar-title">Teknik Servis Yönetim Paneli</span>
+      <div class="navbar-right">
+        <span>Personel Paneli</span>
+        <div class="avatar">PP</div>
+      </div>
+    </nav>
+
+    <main class="page-content">
+      <div class="page-header">
+        <h1>Servis Kayıtları</h1>
+        <p>Tüm iş emirlerini buradan takip edebilirsiniz.</p>
+      </div>
+
+      <div class="action-bar">
+        <div class="filter-bar" style="margin-bottom:0;">
+          <input type="text" placeholder="🔍  Müşteri, cihaz veya iş emri ara…" />
+          <select>
+            <option value="">Tüm Durumlar</option>
+            <option>Bekliyor</option>
+            <option>Devam Ediyor</option>
+            <option>Tamamlandı</option>
+            <option>İptal</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="modalAc('yeniKayitModal')">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          Yeni Kayıt Ekle
+        </button>
+      </div>
+
+      <!-- Tablo -->
+      <div class="table-card">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>İş Emri No</th>
+                <th>Müşteri</th>
+                <th>Kategori / Cihaz</th>
+                <th>Arıza Tanımı</th>
+                <th>Kullanılan Malzeme</th>
+                <th>Durum</th>
+                <th>Tarih</th>
+                <th>İşlemler</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr id="kayit-1">
+                <td><strong>#0001</strong></td>
+                <td>Ahmet Yılmaz</td>
+                <td>
+                  <span class="kategori-tag">Elektronik</span><br/>
+                  Laptop / Dell
+                </td>
+                <td>Ekran açılmıyor</td>
+                <td>
+                  <span class="malzeme-tag">LCD Panel ×1</span>
+                  <span class="malzeme-tag">Termal Macun ×1</span>
+                </td>
+                <td><span class="badge badge-bekliyor" id="durum-1">Bekliyor</span></td>
+                <td>19.05.2026</td>
+                <td>
+                  <button class="btn-isi-al" id="isiAl-1" onclick="isiAl(1)">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path d="M18 11V6a2 2 0 00-2-2 2 2 0 00-2 2v0M14 10V4a2 2 0 00-2-2 2 2 0 00-2 2v2M10 10.5V6a2 2 0 00-2-2 2 2 0 00-2 2v8l3 3h2.5a4 4 0 004-4v-1a2 2 0 00-2-2h-1z"/>
+                    </svg>
+                    İşi Al
+                  </button>
+                  <button class="tbl-btn edit" onclick="editAc(1)">✏️</button>
+                  <button class="tbl-btn delete">🗑️</button>
+                </td>
+              </tr>
+              <tr id="kayit-2" class="devam-ediyor">
+                <td><strong>#0002</strong></td>
+                <td>Fatma Kaya</td>
+                <td>
+                  <span class="kategori-tag">Elektronik</span><br/>
+                  Telefon / Samsung
+                </td>
+                <td>Şarj olmuyor</td>
+                <td><span class="malzeme-tag">Şarj Soketi ×1</span></td>
+                <td><span class="badge badge-devam" id="durum-2">Devam Ediyor</span></td>
+                <td>18.05.2026</td>
+                <td>
+                  <button class="tbl-btn edit" onclick="editAc(2)">✏️</button>
+                  <button class="tbl-btn delete">🗑️</button>
+                </td>
+              </tr>
+              <tr id="kayit-3">
+                <td><strong>#0003</strong></td>
+                <td>Mehmet Demir</td>
+                <td>
+                  <span class="kategori-tag">Beyaz Eşya</span><br/>
+                  Çamaşır Makinesi / Arçelik
+                </td>
+                <td>Su almıyor</td>
+                <td><span class="malzeme-tag">Su Vanası ×1</span></td>
+                <td><span class="badge badge-tamamlandi" id="durum-3">Tamamlandı</span></td>
+                <td>17.05.2026</td>
+                <td>
+                  <button class="tbl-btn edit" onclick="editAc(3)">✏️</button>
+                  <button class="tbl-btn delete">🗑️</button>
+                </td>
+              </tr>
+              <tr id="kayit-4">
+                <td><strong>#0004</strong></td>
+                <td>Zeynep Arslan</td>
+                <td>
+                  <span class="kategori-tag">Otomotiv</span><br/>
+                  Otomobil / Ford
+                </td>
+                <td>Far çalışmıyor</td>
+                <td><span class="malzeme-tag">Far Ampulü ×2</span></td>
+                <td><span class="badge badge-bekliyor" id="durum-4">Bekliyor</span></td>
+                <td>20.05.2026</td>
+                <td>
+                  <button class="btn-isi-al" id="isiAl-4" onclick="isiAl(4)">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path d="M18 11V6a2 2 0 00-2-2 2 2 0 00-2 2v0M14 10V4a2 2 0 00-2-2 2 2 0 00-2 2v2M10 10.5V6a2 2 0 00-2-2 2 2 0 00-2 2v8l3 3h2.5a4 4 0 004-4v-1a2 2 0 00-2-2h-1z"/>
+                    </svg>
+                    İşi Al
+                  </button>
+                  <button class="tbl-btn edit" onclick="editAc(4)">✏️</button>
+                  <button class="tbl-btn delete">🗑️</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="pagination">
+        <button class="page-btn">‹</button>
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn">›</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- ==============================================
+       YENİ KAYIT MODAL
+  =============================================== -->
+  <div class="modal-overlay" id="yeniKayitModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Yeni Servis Kaydı</h2>
+        <button class="modal-close" onclick="modalKapat('yeniKayitModal')">×</button>
+      </div>
+      <div class="modal-body">
+
+        <!-- Müşteri Bilgileri -->
+        <p class="form-section-title">Müşteri Bilgileri</p>
+        <div class="form-group">
+          <label>Adı Soyadı</label>
+          <input type="text" placeholder="Adı Soyadı" />
+        </div>
+        <div class="form-group">
+          <label>Telefon</label>
+          <input type="tel" placeholder="05xx xxx xx xx" />
+        </div>
+
+        <hr class="form-divider"/>
+
+        <!-- Kategori & Cihaz -->
+        <p class="form-section-title">Kategori & Cihaz Bilgileri</p>
+
+        <div class="form-group">
+          <label>Kategori</label>
+          <select id="yeniKategori" onchange="kategoriDegisti('yeni')">
+            <option value="">— Kategori Seçin —</option>
+            <option value="elektronik">Elektronik</option>
+            <option value="beyaz-esya">Beyaz Eşya</option>
+            <option value="otomotiv">Otomotiv</option>
+            <option value="iklimlendirme">İklimlendirme</option>
+            <option value="diger">Diğer</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Cihaz Türü</label>
+          <select id="yeniCihazTuru" disabled>
+            <option value="">— Önce kategori seçin —</option>
+          </select>
+        </div>
+
+        <!-- Kategori seçilmeden uyarı -->
+        <div class="kategori-hint full-width" id="yeniKategoriHint">
+          ℹ️ Cihaz türünü görmek için önce kategori seçin.
+        </div>
+
+        <div class="form-group">
+          <label>Marka / Model</label>
+          <input type="text" placeholder="örn: Arçelik 8 kg" />
+        </div>
+
+        <div class="form-group">
+          <label>Durum</label>
+          <select>
+            <option value="bekliyor">Bekliyor</option>
+            <option value="devam">Devam Ediyor</option>
+            <option value="tamamlandi">Tamamlandı</option>
+            <option value="iptal">İptal</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Kayıt Tarihi</label>
+          <input type="date" />
+        </div>
+
+        <hr class="form-divider"/>
+        <p class="form-section-title">Arıza & Malzeme</p>
+
+        <div class="form-group full-width">
+          <label>Arıza / Şikayet Tanımı</label>
+          <textarea placeholder="Müşterinin bildirdiği arıza detayları…"></textarea>
+        </div>
+
+        <div class="malzeme-section">
+          <label>Kullanılan Malzemeler</label>
+          <div id="yeniMalzemeListesi">
+            <div class="malzeme-row">
+              <input type="text" placeholder="Malzeme adı" />
+              <input type="number" placeholder="Adet" min="1" value="1" />
+              <button class="malzeme-remove" type="button" onclick="this.closest('.malzeme-row').remove()">×</button>
+            </div>
+          </div>
+          <button class="btn-add-malzeme" type="button" onclick="malzemeEkle('yeniMalzemeListesi')">+ Malzeme Ekle</button>
+        </div>
+
+        <div class="form-group full-width">
+          <label>Teknisyen Notu (İsteğe Bağlı)</label>
+          <textarea placeholder="Teknik inceleme notları…"></textarea>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="modalKapat('yeniKayitModal')">İptal</button>
+        <button class="btn btn-primary">Kaydet</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==============================================
+       EDİT MODAL
+  =============================================== -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Kaydı Düzenle — <span id="editBaslik" style="color:var(--accent-blue);">#0001</span></h2>
+        <button class="modal-close" onclick="modalKapat('editModal')">×</button>
+      </div>
+      <div class="modal-body">
+
+        <!-- İşi Üstlenen Personel -->
+        <div id="personelBilgiAlani" class="personel-bilgi full-width"></div>
+
+        <hr class="form-divider"/>
+        <p class="form-section-title">Müşteri Bilgileri</p>
+
+        <div class="form-group">
+          <label>Adı Soyadı</label>
+          <input type="text" id="editMusteri" />
+        </div>
+        <div class="form-group">
+          <label>Telefon</label>
+          <input type="tel" id="editTelefon" />
+        </div>
+
+        <hr class="form-divider"/>
+        <p class="form-section-title">Kategori & Cihaz Bilgileri</p>
+
+        <div class="form-group">
+          <label>Kategori</label>
+          <select id="editKategori" onchange="kategoriDegisti('edit')">
+            <option value="">— Kategori Seçin —</option>
+            <option value="elektronik">Elektronik</option>
+            <option value="beyaz-esya">Beyaz Eşya</option>
+            <option value="otomotiv">Otomotiv</option>
+            <option value="iklimlendirme">İklimlendirme</option>
+            <option value="diger">Diğer</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Cihaz Türü</label>
+          <select id="editCihazTuru" disabled>
+            <option value="">— Önce kategori seçin —</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Marka / Model</label>
+          <input type="text" id="editMarka" />
+        </div>
+
+        <div class="form-group">
+          <label>Durum</label>
+          <select id="editDurum">
+            <option value="bekliyor">Bekliyor</option>
+            <option value="devam">Devam Ediyor</option>
+            <option value="tamamlandi">Tamamlandı</option>
+            <option value="iptal">İptal</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Tarih</label>
+          <input type="date" id="editTarih" />
+        </div>
+
+        <hr class="form-divider"/>
+        <p class="form-section-title">Arıza & Malzeme</p>
+
+        <div class="form-group full-width">
+          <label>Arıza / Şikayet Tanımı</label>
+          <textarea id="editAriza" style="min-height:70px;"></textarea>
+        </div>
+
+        <div class="malzeme-section">
+          <label>Kullanılan Malzemeler</label>
+          <div id="editMalzemeListesi">
+            <div class="malzeme-row">
+              <input type="text" placeholder="Malzeme adı" />
+              <input type="number" placeholder="Adet" min="1" value="1" />
+              <button class="malzeme-remove" type="button" onclick="this.closest('.malzeme-row').remove()">×</button>
+            </div>
+          </div>
+          <button class="btn-add-malzeme" type="button" onclick="malzemeEkle('editMalzemeListesi')">+ Malzeme Ekle</button>
+        </div>
+
+        <div class="form-group full-width">
+          <label>Teknisyen Notu</label>
+          <textarea id="editNot" style="min-height:70px;" placeholder="Teknik inceleme notları…"></textarea>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="modalKapat('editModal')">İptal</button>
+        <button class="btn btn-primary">Güncelle</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast green" id="toast">
+    <span>✅</span>
+    <span id="toastMesaj">İşlem başarılı</span>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script>
+    // ── Kategori → Cihaz Türleri eşleşmesi ──
+    // Backend bağlandığında bu veri API'den gelecek
+    var kategoriVerisi = {
+      'elektronik':     ['Laptop', 'Masaüstü Bilgisayar', 'Tablet', 'Akıllı Telefon', 'Yazıcı', 'Monitör', 'TV / Ekran', 'Diğer'],
+      'beyaz-esya':     ['Çamaşır Makinesi', 'Bulaşık Makinesi', 'Buzdolabı', 'Fırın / Ocak', 'Kurutma Makinesi', 'Mikrodalga', 'Diğer'],
+      'otomotiv':       ['Otomobil', 'Motosiklet', 'Kamyonet', 'Elektrikli Araç', 'Scooter', 'Diğer'],
+      'iklimlendirme':  ['Klima (Split)', 'Merkezi Sistem', 'Fan Coil', 'Isı Pompası', 'Diğer'],
+      'diger':          ['Diğer']
+    };
+
+    // ── Örnek kayıt verisi ──
+    var kayitlar = {
+      1: { no:'#0001', musteri:'Ahmet Yılmaz', telefon:'0532 111 22 33', kategori:'elektronik', cihazTuru:'Laptop', marka:'Dell XPS 15', durum:'bekliyor', tarih:'2026-05-19', ariza:'Ekran açılmıyor.', not:'', personel: null },
+      2: { no:'#0002', musteri:'Fatma Kaya',   telefon:'0544 222 33 44', kategori:'elektronik', cihazTuru:'Akıllı Telefon', marka:'Samsung Galaxy S22', durum:'devam', tarih:'2026-05-18', ariza:'Şarj olmuyor.', not:'Soket değiştirildi.', personel:{ ad:'Ali Kara', rol:'Teknisyen', initials:'AK' } },
+      3: { no:'#0003', musteri:'Mehmet Demir', telefon:'0555 333 44 55', kategori:'beyaz-esya', cihazTuru:'Çamaşır Makinesi', marka:'Arçelik 8 kg', durum:'tamamlandi', tarih:'2026-05-17', ariza:'Su almıyor.', not:'Vana değiştirildi.', personel:{ ad:'Ali Kara', rol:'Teknisyen', initials:'AK' } },
+      4: { no:'#0004', musteri:'Zeynep Arslan',telefon:'0533 444 55 66', kategori:'otomotiv', cihazTuru:'Otomobil', marka:'Ford Focus', durum:'bekliyor', tarih:'2026-05-20', ariza:'Far çalışmıyor.', not:'', personel: null }
+    };
+
+    // ── Modal aç/kapat ──
+    function modalAc(id)   { document.getElementById(id).classList.add('open'); }
+    function modalKapat(id){ document.getElementById(id).classList.remove('open'); }
+
+    // ── Toast ──
+    function toastGoster(mesaj) {
+      var t = document.getElementById('toast');
+      document.getElementById('toastMesaj').textContent = mesaj;
+      t.classList.add('show');
+      setTimeout(function(){ t.classList.remove('show'); }, 2800);
+    }
+
+    // ── Malzeme satırı ekle ──
+    function malzemeEkle(listeId) {
+      var liste = document.getElementById(listeId);
+      var row = document.createElement('div');
+      row.className = 'malzeme-row';
+      row.innerHTML =
+        '<input type="text" placeholder="Malzeme adı" />' +
+        '<input type="number" placeholder="Adet" min="1" value="1" />' +
+        '<button class="malzeme-remove" type="button" onclick="this.closest(\'.malzeme-row\').remove()">×</button>';
+      liste.appendChild(row);
+    }
+
+    // ── Kategori değişince cihaz türlerini doldur ──
+    function kategoriDegisti(prefix) {
+      var kategoriSel = document.getElementById(prefix + 'Kategori');
+      var cihazSel    = document.getElementById(prefix + 'CihazTuru');
+      var hint        = document.getElementById(prefix + 'KategoriHint');
+      var secilen     = kategoriSel.value;
+
+      cihazSel.innerHTML = '';
+
+      if (!secilen) {
+        cihazSel.disabled = true;
+        cihazSel.innerHTML = '<option value="">— Önce kategori seçin —</option>';
+        if (hint) hint.classList.add('goster');
+        return;
+      }
+
+      if (hint) hint.classList.remove('goster');
+      cihazSel.disabled = false;
+
+      var bos = document.createElement('option');
+      bos.value = ''; bos.textContent = '— Cihaz Türü Seçin —';
+      cihazSel.appendChild(bos);
+
+      var turler = kategoriVerisi[secilen] || ['Diğer'];
+      turler.forEach(function(tur) {
+        var opt = document.createElement('option');
+        opt.value = tur; opt.textContent = tur;
+        cihazSel.appendChild(opt);
+      });
+    }
+
+    // ── İşi Al ──
+    function isiAl(id) {
+      var badge = document.getElementById('durum-' + id);
+      badge.textContent = 'Devam Ediyor';
+      badge.className = 'badge badge-devam';
+      document.getElementById('kayit-' + id).classList.add('devam-ediyor');
+      var btn = document.getElementById('isiAl-' + id);
+      if (btn) btn.remove();
+      kayitlar[id].durum = 'devam';
+      kayitlar[id].personel = { ad:'Sen (Aktif Personel)', rol:'Teknisyen', initials:'SP' };
+      toastGoster('İş emri üstlenildi, durum "Devam Ediyor" olarak güncellendi.');
+    }
+
+    // ── Edit modalını aç ve doldur ──
+    function editAc(id) {
+      var k = kayitlar[id];
+      if (!k) return;
+
+      document.getElementById('editBaslik').textContent = k.no;
+
+      // Personel kutusu
+      var alan = document.getElementById('personelBilgiAlani');
+      if (k.personel) {
+        alan.className = 'personel-bilgi full-width';
+        alan.innerHTML =
+          '<div class="personel-bilgi-avatar">' + k.personel.initials + '</div>' +
+          '<div class="personel-bilgi-text">' +
+            '<span>' + k.personel.ad + '</span>' +
+            '<span>' + k.personel.rol + ' · İşi Üstlenen</span>' +
+          '</div>';
+      } else {
+        alan.className = 'personel-bilgi bos full-width';
+        alan.innerHTML =
+          '<div class="personel-bilgi-avatar">—</div>' +
+          '<div class="personel-bilgi-text">' +
+            '<span style="color:var(--text-muted);">Henüz üstlenilmedi</span>' +
+            '<span>Bu kayıt hâlâ beklemede</span>' +
+          '</div>';
+      }
+
+      // Form doldur
+      document.getElementById('editMusteri').value = k.musteri;
+      document.getElementById('editTelefon').value = k.telefon;
+      document.getElementById('editMarka').value   = k.marka;
+      document.getElementById('editAriza').value   = k.ariza;
+      document.getElementById('editNot').value     = k.not;
+      document.getElementById('editTarih').value   = k.tarih;
+      document.getElementById('editDurum').value   = k.durum;
+
+      // Kategori seç → cihaz türlerini doldur → cihaz türünü seç
+      var katSel = document.getElementById('editKategori');
+      katSel.value = k.kategori;
+      kategoriDegisti('edit');
+      document.getElementById('editCihazTuru').value = k.cihazTuru;
+
+      modalAc('editModal');
+    }
+
+    // ESC kapat
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') { modalKapat('editModal'); modalKapat('yeniKayitModal'); }
+    });
+  </script>
+</body>
+</html>
