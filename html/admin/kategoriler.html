@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kategoriler – ServisTakip Admin</title>
+  <link rel="stylesheet" href="../../css/style.css"/>
+  <link rel="stylesheet" href="../../css/admin.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar-logo"><h2><span>Servis</span>Takip</h2></div>
+    <p class="sidebar-menu-label">Ana Menü</p>
+    <ul class="sidebar-menu">
+      <li><a href="../index.html"><svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</a></li>
+      <li><a href="../servis-kayitlari.html"><svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>Servis Kayıtları</a></li>
+      <li><a href="../randevular.html"><svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Randevular</a></li>
+    </ul>
+    <div class="sidebar-divider"></div>
+    <p class="sidebar-menu-label">Yönetim</p>
+    <ul class="sidebar-menu">
+      <li><a class="admin-toggle" onclick="adminToggle()" id="adminToggleBtn"><svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Admin Panel<svg id="adminChevron" style="margin-left:auto;width:14px;height:14px;transition:transform 0.25s;transform:rotate(180deg);" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></a></li>
+    </ul>
+    <ul class="admin-submenu acik" id="adminSubmenu">
+      <li><a href="personel.html" class="submenu-item"><svg style="width:15px;height:15px;flex-shrink:0;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Personel</a></li>
+      <li><a href="kategoriler.html" class="submenu-item active"><svg style="width:15px;height:15px;flex-shrink:0;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h10"/></svg>Kategoriler</a></li>
+      <li><a href="gorevlendirme.html" class="submenu-item"><svg style="width:15px;height:15px;flex-shrink:0;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Görevlendirme</a></li>
+    </ul>
+    <div class="sidebar-footer">v1.0.0 © 2026</div>
+  </aside>
+
+  <div class="main-wrapper">
+    <nav class="navbar">
+      <span class="navbar-title">Teknik Servis Yönetim Paneli</span>
+      <div class="navbar-right">
+        <span>Admin Paneli</span>
+        <div class="avatar" style="background:#8b5cf6;">AD</div>
+      </div>
+    </nav>
+
+    <main class="page-content">
+      <div class="page-header">
+        <h1>Kategori & Cihaz Türleri</h1>
+        <p>Servis kategorilerini ve her kategoriye ait cihaz türlerini yönetin.</p>
+      </div>
+
+      <div class="kat-layout">
+
+        <!-- Sol: Kategoriler -->
+        <div class="kat-liste-card">
+          <div class="kat-liste-header">
+            <h3>Kategoriler</h3>
+            <button class="btn btn-primary" style="padding:6px 12px;font-size:12px;" onclick="modalAc('katModal')">+ Ekle</button>
+          </div>
+
+          <div class="kat-item secili" onclick="kategoriSec(this, 'Elektronik', '#3b82f6')">
+            <div class="kat-item-sol">
+              <span class="kat-renk" style="background:#3b82f6;"></span>
+              <div><div class="kat-ad">Elektronik</div><div class="kat-adet">8 cihaz türü</div></div>
+            </div>
+            <div class="kat-item-sag">
+              <button class="tbl-btn edit" onclick="event.stopPropagation();katEditAc('Elektronik','#3b82f6')">✏️</button>
+              <button class="tbl-btn delete" onclick="event.stopPropagation()">🗑️</button>
+            </div>
+          </div>
+
+          <div class="kat-item" onclick="kategoriSec(this, 'Beyaz Eşya', '#10b981')">
+            <div class="kat-item-sol">
+              <span class="kat-renk" style="background:#10b981;"></span>
+              <div><div class="kat-ad">Beyaz Eşya</div><div class="kat-adet">7 cihaz türü</div></div>
+            </div>
+            <div class="kat-item-sag">
+              <button class="tbl-btn edit" onclick="event.stopPropagation();katEditAc('Beyaz Eşya','#10b981')">✏️</button>
+              <button class="tbl-btn delete" onclick="event.stopPropagation()">🗑️</button>
+            </div>
+          </div>
+
+          <div class="kat-item" onclick="kategoriSec(this, 'Otomotiv', '#f59e0b')">
+            <div class="kat-item-sol">
+              <span class="kat-renk" style="background:#f59e0b;"></span>
+              <div><div class="kat-ad">Otomotiv</div><div class="kat-adet">6 cihaz türü</div></div>
+            </div>
+            <div class="kat-item-sag">
+              <button class="tbl-btn edit" onclick="event.stopPropagation();katEditAc('Otomotiv','#f59e0b')">✏️</button>
+              <button class="tbl-btn delete" onclick="event.stopPropagation()">🗑️</button>
+            </div>
+          </div>
+
+          <div class="kat-item" onclick="kategoriSec(this, 'İklimlendirme', '#8b5cf6')">
+            <div class="kat-item-sol">
+              <span class="kat-renk" style="background:#8b5cf6;"></span>
+              <div><div class="kat-ad">İklimlendirme</div><div class="kat-adet">5 cihaz türü</div></div>
+            </div>
+            <div class="kat-item-sag">
+              <button class="tbl-btn edit" onclick="event.stopPropagation();katEditAc('İklimlendirme','#8b5cf6')">✏️</button>
+              <button class="tbl-btn delete" onclick="event.stopPropagation()">🗑️</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sağ: Cihaz türleri -->
+        <div class="cihaz-card">
+          <div class="cihaz-card-header">
+            <h3 id="cihazBaslik">
+              <span class="secili-kat-badge">
+                <span style="width:10px;height:10px;border-radius:50%;background:#3b82f6;display:inline-block;"></span>
+                Elektronik — Cihaz Türleri
+              </span>
+            </h3>
+            <button class="btn btn-primary" style="padding:6px 12px;font-size:12px;" onclick="modalAc('cihazModal')">+ Cihaz Türü Ekle</button>
+          </div>
+          <div class="cihaz-grid" id="cihazGrid"></div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- KATEGORİ MODAL -->
+  <div class="modal-overlay" id="katModal">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h2>Yeni Kategori</h2>
+        <button class="modal-close" onclick="modalKapat('katModal')">×</button>
+      </div>
+      <div class="modal-body tek-kolon">
+        <div class="form-group"><label>Kategori Adı</label><input type="text" placeholder="örn: Medikal Cihazlar"/></div>
+        <div class="form-group">
+          <label>Renk</label>
+          <div class="renk-secici">
+            <span class="renk-opt secili" style="background:#3b82f6;" onclick="renkSec(this)"></span>
+            <span class="renk-opt" style="background:#10b981;" onclick="renkSec(this)"></span>
+            <span class="renk-opt" style="background:#f59e0b;" onclick="renkSec(this)"></span>
+            <span class="renk-opt" style="background:#ef4444;" onclick="renkSec(this)"></span>
+            <span class="renk-opt" style="background:#8b5cf6;" onclick="renkSec(this)"></span>
+            <span class="renk-opt" style="background:#ec4899;" onclick="renkSec(this)"></span>
+            <span class="renk-opt" style="background:#64748b;" onclick="renkSec(this)"></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="modalKapat('katModal')">İptal</button>
+        <button class="btn btn-primary">Kaydet</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CİHAZ TÜRÜ MODAL -->
+  <div class="modal-overlay" id="cihazModal">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h2>Yeni Cihaz Türü</h2>
+        <button class="modal-close" onclick="modalKapat('cihazModal')">×</button>
+      </div>
+      <div class="modal-body tek-kolon">
+        <div class="form-group"><label>Kategori</label><select><option>Elektronik</option><option>Beyaz Eşya</option><option>Otomotiv</option><option>İklimlendirme</option></select></div>
+        <div class="form-group"><label>Cihaz Türü Adı</label><input type="text" placeholder="örn: Laptop"/></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="modalKapat('cihazModal')">İptal</button>
+        <button class="btn btn-primary">Kaydet</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- KATEGORİ EDİT MODAL -->
+  <div class="modal-overlay" id="katEditModal">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h2>Kategoriyi Düzenle</h2>
+        <button class="modal-close" onclick="modalKapat('katEditModal')">×</button>
+      </div>
+      <div class="modal-body tek-kolon">
+        <div class="form-group"><label>Kategori Adı</label><input type="text" id="katEditAd"/></div>
+        <div class="form-group">
+          <label>Renk</label>
+          <div class="renk-secici">
+            <span class="renk-opt secili" style="background:#3b82f6;" data-renk="#3b82f6" onclick="renkSec(this)"></span>
+            <span class="renk-opt" style="background:#10b981;" data-renk="#10b981" onclick="renkSec(this)"></span>
+            <span class="renk-opt" style="background:#f59e0b;" data-renk="#f59e0b" onclick="renkSec(this)"></span>
+            <span class="renk-opt" style="background:#ef4444;" data-renk="#ef4444" onclick="renkSec(this)"></span>
+            <span class="renk-opt" style="background:#8b5cf6;" data-renk="#8b5cf6" onclick="renkSec(this)"></span>
+            <span class="renk-opt" style="background:#ec4899;" data-renk="#ec4899" onclick="renkSec(this)"></span>
+            <span class="renk-opt" style="background:#64748b;" data-renk="#64748b" onclick="renkSec(this)"></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="modalKapat('katEditModal')">İptal</button>
+        <button class="btn btn-primary">Güncelle</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CİHAZ TÜRÜ EDİT MODAL -->
+  <div class="modal-overlay" id="cihazEditModal">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h2>Cihaz Türünü Düzenle</h2>
+        <button class="modal-close" onclick="modalKapat('cihazEditModal')">×</button>
+      </div>
+      <div class="modal-body tek-kolon">
+        <div class="form-group"><label>Cihaz Türü Adı</label><input type="text" id="cihazEditAd"/></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="modalKapat('cihazEditModal')">İptal</button>
+        <button class="btn btn-primary">Güncelle</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/main.js"></script>
+  <script>
+    var cihazVerisi = {
+      'Elektronik':    ['Laptop','Masaüstü Bilgisayar','Tablet','Akıllı Telefon','Yazıcı','Monitör','TV / Ekran','Diğer'],
+      'Beyaz Eşya':    ['Çamaşır Makinesi','Bulaşık Makinesi','Buzdolabı','Fırın / Ocak','Kurutma Makinesi','Mikrodalga','Diğer'],
+      'Otomotiv':      ['Otomobil','Motosiklet','Kamyonet','Elektrikli Araç','Scooter','Diğer'],
+      'İklimlendirme': ['Klima (Split)','Merkezi Sistem','Fan Coil','Isı Pompası','Diğer']
+    };
+
+    function cihazlariGoster(kat) {
+      var grid = document.getElementById('cihazGrid');
+      grid.innerHTML = '';
+      (cihazVerisi[kat] || []).forEach(function(t) {
+        grid.innerHTML +=
+          '<div class="cihaz-item">' +
+            '<span class="cihaz-item-ad">' + t + '</span>' +
+            '<div class="cihaz-item-butonlar">' +
+              '<button class="tbl-btn edit" onclick="cihazEditAc(\'' + t.replace(/'/g, "\\'") + '\')">✏️</button>' +
+              '<button class="tbl-btn delete">🗑️</button>' +
+            '</div>' +
+          '</div>';
+      });
+    }
+
+    var aktifKat = 'Elektronik';
+    var aktifRenk = '#3b82f6';
+
+    function kategoriSec(el, kat, renk) {
+      document.querySelectorAll('.kat-item').forEach(function(i) { i.classList.remove('secili'); });
+      el.classList.add('secili');
+      aktifKat = kat;
+      aktifRenk = renk || '#3b82f6';
+      document.getElementById('cihazBaslik').innerHTML =
+        '<span class="secili-kat-badge">' +
+          '<span style="width:10px;height:10px;border-radius:50%;background:' + aktifRenk + ';display:inline-block;"></span> ' +
+          kat + ' — Cihaz Türleri' +
+        '</span>';
+      cihazlariGoster(kat);
+    }
+
+    // ── Kategori edit ──
+    function katEditAc(ad, renk) {
+      document.getElementById('katEditAd').value = ad;
+      // Renk seçiciyi güncelle
+      document.querySelectorAll('#katEditModal .renk-opt').forEach(function(r) {
+        r.classList.remove('secili');
+        if (r.style.background === renk || r.dataset.renk === renk) r.classList.add('secili');
+      });
+      modalAc('katEditModal');
+    }
+
+    // ── Cihaz türü edit ──
+    function cihazEditAc(ad) {
+      document.getElementById('cihazEditAd').value = ad;
+      modalAc('cihazEditModal');
+    }
+
+    function renkSec(el) {
+      document.querySelectorAll('.renk-opt').forEach(function(r) { r.classList.remove('secili'); });
+      el.classList.add('secili');
+    }
+
+    function adminToggle() {
+      var s = document.getElementById('adminSubmenu'), c = document.getElementById('adminChevron');
+      s.classList.toggle('acik');
+      c.style.transform = s.classList.contains('acik') ? 'rotate(180deg)' : 'rotate(0deg)';
+    }
+    function modalAc(id)    { document.getElementById(id).classList.add('open'); }
+    function modalKapat(id) { document.getElementById(id).classList.remove('open'); }
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { ['katModal','cihazModal','katEditModal','cihazEditModal'].forEach(modalKapat); }});
+
+    cihazlariGoster('Elektronik');
+  </script>
+</body>
+</html>

@@ -6,271 +6,7 @@
   <title>Servis Kayıtları – ServisTakip</title>
   <link rel="stylesheet" href="../css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-  <style>
-    body { font-family: 'Inter', sans-serif; }
-
-    .action-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 18px;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    /* ── Kategori bilgi notu ── */
-    .kategori-hint {
-      grid-column: 1 / -1;
-      background: rgba(245,158,11,0.07);
-      border: 1.5px solid rgba(245,158,11,0.25);
-      border-radius: var(--radius-sm);
-      padding: 9px 14px;
-      font-size: 12.5px;
-      color: #92400e;
-      display: none;
-    }
-    .kategori-hint.goster { display: block; }
-
-    /* ── Cihaz türü disabled görünümü ── */
-    select:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    /* ── Modal ── */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.45);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-overlay.open { display: flex; }
-
-    .modal {
-      background: var(--bg-white);
-      border-radius: 14px;
-      width: 100%;
-      max-width: 580px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.18);
-      animation: modalIn 0.22s ease;
-      max-height: 92vh;
-      overflow-y: auto;
-    }
-
-    @keyframes modalIn {
-      from { opacity: 0; transform: translateY(18px) scale(0.97); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    .modal-header {
-      padding: 20px 24px 16px;
-      border-bottom: 1px solid var(--border-color);
-      display: flex; align-items: center; justify-content: space-between;
-      position: sticky; top: 0; background: var(--bg-white); z-index: 1;
-    }
-    .modal-header h2 { font-size: 16px; font-weight: 700; color: var(--text-dark); }
-
-    .modal-close {
-      background: none; border: none; cursor: pointer;
-      color: var(--text-muted); font-size: 22px; line-height: 1;
-      padding: 2px 6px; border-radius: 4px; transition: background 0.15s;
-    }
-    .modal-close:hover { background: var(--border-color); }
-
-    .modal-body {
-      padding: 22px 24px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px 18px;
-    }
-    .modal-body .full-width { grid-column: 1 / -1; }
-
-    /* ── Bölüm ayırıcı ── */
-    .form-divider {
-      grid-column: 1 / -1;
-      border: none;
-      border-top: 1px solid var(--border-color);
-      margin: 4px 0;
-    }
-
-    .form-section-title {
-      grid-column: 1 / -1;
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-    }
-
-    /* ── Form ── */
-    .form-group { display: flex; flex-direction: column; gap: 5px; }
-
-    .form-group label {
-      font-size: 12px; font-weight: 600; color: var(--text-muted);
-      text-transform: uppercase; letter-spacing: 0.5px;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      padding: 9px 13px;
-      border: 1.5px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      font-size: 13.5px; font-family: 'Inter', sans-serif;
-      color: var(--text-dark); background: #f8fafc;
-      outline: none; transition: border-color 0.2s, background 0.2s;
-    }
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-      border-color: var(--accent-blue); background: var(--bg-white);
-    }
-    .form-group textarea { resize: vertical; min-height: 80px; }
-
-    /* ── Personel bilgi kutusu ── */
-    .personel-bilgi {
-      grid-column: 1 / -1;
-      background: rgba(59,130,246,0.06);
-      border: 1.5px solid rgba(59,130,246,0.2);
-      border-radius: var(--radius-sm);
-      padding: 12px 16px;
-      display: flex; align-items: center; gap: 12px;
-    }
-    .personel-bilgi.bos {
-      background: #f8fafc;
-      border-color: var(--border-color);
-    }
-    .personel-bilgi-avatar {
-      width: 36px; height: 36px; border-radius: 50%;
-      background: var(--accent-blue); color: #fff;
-      font-size: 13px; font-weight: 700;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .personel-bilgi.bos .personel-bilgi-avatar {
-      background: var(--border-color); color: var(--text-muted);
-    }
-    .personel-bilgi-text { display: flex; flex-direction: column; gap: 2px; }
-    .personel-bilgi-text span:first-child { font-size: 13px; font-weight: 700; color: var(--text-dark); }
-    .personel-bilgi-text span:last-child  { font-size: 12px; color: var(--text-muted); }
-
-    /* ── Malzeme ── */
-    .malzeme-section { grid-column: 1 / -1; }
-    .malzeme-section > label {
-      font-size: 12px; font-weight: 600; color: var(--text-muted);
-      text-transform: uppercase; letter-spacing: 0.5px;
-      display: block; margin-bottom: 8px;
-    }
-    .malzeme-row {
-      display: grid; grid-template-columns: 1fr 90px 36px;
-      gap: 8px; margin-bottom: 8px; align-items: center;
-    }
-    .malzeme-row input {
-      padding: 9px 13px; border: 1.5px solid var(--border-color);
-      border-radius: var(--radius-sm); font-size: 13.5px;
-      font-family: 'Inter', sans-serif; color: var(--text-dark);
-      background: #f8fafc; outline: none;
-      transition: border-color 0.2s, background 0.2s; width: 100%;
-    }
-    .malzeme-row input:focus { border-color: var(--accent-blue); background: var(--bg-white); }
-    .malzeme-remove {
-      background: none; border: 1.5px solid var(--border-color);
-      border-radius: var(--radius-sm); width: 36px; height: 36px;
-      cursor: pointer; color: var(--red); font-size: 16px;
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.15s; flex-shrink: 0;
-    }
-    .malzeme-remove:hover { background: rgba(239,68,68,0.08); border-color: var(--red); }
-    .btn-add-malzeme {
-      background: none; border: 1.5px dashed var(--accent-blue);
-      border-radius: var(--radius-sm); color: var(--accent-blue);
-      font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif;
-      padding: 8px 14px; cursor: pointer; width: 100%;
-      transition: background 0.15s; margin-top: 2px;
-    }
-    .btn-add-malzeme:hover { background: rgba(59,130,246,0.06); }
-
-    .modal-footer {
-      padding: 16px 24px; border-top: 1px solid var(--border-color);
-      display: flex; justify-content: flex-end; gap: 10px;
-      position: sticky; bottom: 0; background: var(--bg-white);
-    }
-
-    /* ── Tabloda malzeme etiketi ── */
-    .malzeme-tag {
-      display: inline-block; background: rgba(139,92,246,0.10);
-      color: #6d28d9; border-radius: 20px;
-      font-size: 12px; font-weight: 600;
-      padding: 3px 9px; margin: 2px 2px 2px 0;
-    }
-
-    /* ── Tabloda kategori etiketi ── */
-    .kategori-tag {
-      display: inline-block; background: rgba(59,130,246,0.08);
-      color: #1d4ed8; border-radius: 20px;
-      font-size: 11px; font-weight: 600;
-      padding: 2px 8px; margin-bottom: 3px;
-    }
-
-    /* ── Tablo butonları ── */
-    .tbl-btn {
-      background: none; border: none; cursor: pointer;
-      padding: 5px 7px; border-radius: var(--radius-sm);
-      color: var(--text-muted); transition: background 0.15s, color 0.15s;
-      font-size: 13px;
-    }
-    .tbl-btn:hover        { background: var(--border-color); color: var(--text-dark); }
-    .tbl-btn.edit:hover   { color: var(--accent-blue); }
-    .tbl-btn.delete:hover { color: var(--red); }
-
-    /* ── İşi Al butonu ── */
-    .btn-isi-al {
-      display: inline-flex; align-items: center; gap: 4px;
-      background: none; border: 1.5px solid #10b981;
-      border-radius: var(--radius-sm); color: #047857;
-      font-size: 12px; font-weight: 600; font-family: 'Inter', sans-serif;
-      padding: 4px 10px; cursor: pointer;
-      transition: background 0.15s; white-space: nowrap;
-    }
-    .btn-isi-al:hover { background: rgba(16,185,129,0.1); }
-
-    tr.devam-ediyor { background: rgba(59,130,246,0.03); }
-
-    /* ── Sayfalama ── */
-    .pagination {
-      display: flex; align-items: center;
-      justify-content: flex-end; gap: 6px; margin-top: 16px;
-    }
-    .page-btn {
-      min-width: 34px; height: 34px; border-radius: var(--radius-sm);
-      border: 1.5px solid var(--border-color); background: var(--bg-white);
-      font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer;
-      display: flex; align-items: center; justify-content: center; transition: all 0.15s;
-    }
-    .page-btn:hover  { border-color: var(--accent-blue); color: var(--accent-blue); }
-    .page-btn.active { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
-
-    .empty-row td {
-      text-align: center; padding: 40px !important;
-      color: var(--text-muted); font-size: 13px;
-    }
-
-    /* ── Toast ── */
-    .toast {
-      position: fixed; bottom: 28px; right: 28px;
-      background: #1e293b; color: #fff;
-      padding: 12px 20px; border-radius: 10px;
-      font-size: 13px; font-weight: 600;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-      z-index: 999; display: flex; align-items: center; gap: 8px;
-      opacity: 0; transform: translateY(10px);
-      transition: opacity 0.2s, transform 0.2s; pointer-events: none;
-    }
-    .toast.show { opacity: 1; transform: translateY(0); }
-    .toast.green { border-left: 4px solid #10b981; }
-  </style>
+  <link rel="stylesheet" href="../css/servis-kayitlari.css" />
 </head>
 <body>
 
@@ -312,6 +48,22 @@
         </a>
       </li>
     </ul>
+    <div class="sidebar-divider"></div>
+    <p class="sidebar-menu-label">Yönetim</p>
+    <ul class="sidebar-menu" style="flex:0;">
+      <li>
+        <a class="admin-toggle" onclick="adminToggle()" id="adminToggleBtn">
+          <svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          Admin Panel
+          <svg id="adminChevron" style="margin-left:auto;width:14px;height:14px;transition:transform 0.25s;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </a>
+      </li>
+    </ul>
+    <ul class="admin-submenu" id="adminSubmenu">
+      <li><a href="admin/personel.html" class="submenu-item"><svg style="width:15px;height:15px;flex-shrink:0;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Personel</a></li>
+      <li><a href="admin/kategoriler.html" class="submenu-item"><svg style="width:15px;height:15px;flex-shrink:0;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h10"/></svg>Kategoriler</a></li>
+      <li><a href="admin/gorevlendirme.html" class="submenu-item"><svg style="width:15px;height:15px;flex-shrink:0;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Görevlendirme</a></li>
+    </ul>
     <div class="sidebar-footer">v1.0.0 © 2026</div>
   </aside>
 
@@ -331,133 +83,171 @@
         <p>Tüm iş emirlerini buradan takip edebilirsiniz.</p>
       </div>
 
-      <div class="action-bar">
-        <div class="filter-bar" style="margin-bottom:0;">
-          <input type="text" placeholder="🔍  Müşteri, cihaz veya iş emri ara…" />
-          <select>
-            <option value="">Tüm Durumlar</option>
-            <option>Bekliyor</option>
-            <option>Devam Ediyor</option>
-            <option>Tamamlandı</option>
-            <option>İptal</option>
-          </select>
-        </div>
-        <button class="btn btn-primary" onclick="modalAc('yeniKayitModal')">
-          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-            <path d="M12 5v14M5 12h14"/>
-          </svg>
-          Yeni Kayıt Ekle
+      <!-- Sekmeler -->
+      <div style="display:flex; gap:0; margin-bottom:18px; border-bottom:2px solid var(--border-color);">
+        <button class="tab-btn active" id="tab-aktif" onclick="sekmeAc('aktif')">
+          Aktif Kayıtlar
+          <span class="tab-badge">3</span>
+        </button>
+        <button class="tab-btn" id="tab-arsiv" onclick="sekmeAc('arsiv')">
+          Servis Arşivi
+          <span class="tab-badge">1</span>
         </button>
       </div>
 
-      <!-- Tablo -->
-      <div class="table-card">
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>İş Emri No</th>
-                <th>Müşteri</th>
-                <th>Kategori / Cihaz</th>
-                <th>Arıza Tanımı</th>
-                <th>Kullanılan Malzeme</th>
-                <th>Durum</th>
-                <th>Tarih</th>
-                <th>İşlemler</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr id="kayit-1">
-                <td><strong>#0001</strong></td>
-                <td>Ahmet Yılmaz</td>
-                <td>
-                  <span class="kategori-tag">Elektronik</span><br/>
-                  Laptop / Dell
-                </td>
-                <td>Ekran açılmıyor</td>
-                <td>
-                  <span class="malzeme-tag">LCD Panel ×1</span>
-                  <span class="malzeme-tag">Termal Macun ×1</span>
-                </td>
-                <td><span class="badge badge-bekliyor" id="durum-1">Bekliyor</span></td>
-                <td>19.05.2026</td>
-                <td>
-                  <button class="btn-isi-al" id="isiAl-1" onclick="isiAl(1)">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path d="M18 11V6a2 2 0 00-2-2 2 2 0 00-2 2v0M14 10V4a2 2 0 00-2-2 2 2 0 00-2 2v2M10 10.5V6a2 2 0 00-2-2 2 2 0 00-2 2v8l3 3h2.5a4 4 0 004-4v-1a2 2 0 00-2-2h-1z"/>
-                    </svg>
-                    İşi Al
-                  </button>
-                  <button class="tbl-btn edit" onclick="editAc(1)">✏️</button>
-                  <button class="tbl-btn delete">🗑️</button>
-                </td>
-              </tr>
-              <tr id="kayit-2" class="devam-ediyor">
-                <td><strong>#0002</strong></td>
-                <td>Fatma Kaya</td>
-                <td>
-                  <span class="kategori-tag">Elektronik</span><br/>
-                  Telefon / Samsung
-                </td>
-                <td>Şarj olmuyor</td>
-                <td><span class="malzeme-tag">Şarj Soketi ×1</span></td>
-                <td><span class="badge badge-devam" id="durum-2">Devam Ediyor</span></td>
-                <td>18.05.2026</td>
-                <td>
-                  <button class="tbl-btn edit" onclick="editAc(2)">✏️</button>
-                  <button class="tbl-btn delete">🗑️</button>
-                </td>
-              </tr>
-              <tr id="kayit-3">
-                <td><strong>#0003</strong></td>
-                <td>Mehmet Demir</td>
-                <td>
-                  <span class="kategori-tag">Beyaz Eşya</span><br/>
-                  Çamaşır Makinesi / Arçelik
-                </td>
-                <td>Su almıyor</td>
-                <td><span class="malzeme-tag">Su Vanası ×1</span></td>
-                <td><span class="badge badge-tamamlandi" id="durum-3">Tamamlandı</span></td>
-                <td>17.05.2026</td>
-                <td>
-                  <button class="tbl-btn edit" onclick="editAc(3)">✏️</button>
-                  <button class="tbl-btn delete">🗑️</button>
-                </td>
-              </tr>
-              <tr id="kayit-4">
-                <td><strong>#0004</strong></td>
-                <td>Zeynep Arslan</td>
-                <td>
-                  <span class="kategori-tag">Otomotiv</span><br/>
-                  Otomobil / Ford
-                </td>
-                <td>Far çalışmıyor</td>
-                <td><span class="malzeme-tag">Far Ampulü ×2</span></td>
-                <td><span class="badge badge-bekliyor" id="durum-4">Bekliyor</span></td>
-                <td>20.05.2026</td>
-                <td>
-                  <button class="btn-isi-al" id="isiAl-4" onclick="isiAl(4)">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path d="M18 11V6a2 2 0 00-2-2 2 2 0 00-2 2v0M14 10V4a2 2 0 00-2-2 2 2 0 00-2 2v2M10 10.5V6a2 2 0 00-2-2 2 2 0 00-2 2v8l3 3h2.5a4 4 0 004-4v-1a2 2 0 00-2-2h-1z"/>
-                    </svg>
-                    İşi Al
-                  </button>
-                  <button class="tbl-btn edit" onclick="editAc(4)">✏️</button>
-                  <button class="tbl-btn delete">🗑️</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      <!-- AKTİF KAYITLAR -->
+      <div id="sekme-aktif">
+        <div class="action-bar">
+          <div class="filter-bar" style="margin-bottom:0;">
+            <input type="text" placeholder="🔍  Müşteri, cihaz veya iş emri ara…" />
+            <select>
+              <option value="">Tüm Durumlar</option>
+              <option>Bekliyor</option>
+              <option>Devam Ediyor</option>
+              <option>İptal</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="modalAc('yeniKayitModal')">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+            Yeni Kayıt Ekle
+          </button>
+        </div>
+
+        <div class="table-card">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>İş Emri No</th>
+                  <th>Müşteri</th>
+                  <th>Kategori / Cihaz</th>
+                  <th>Arıza Tanımı</th>
+                  <th>Kullanılan Malzeme</th>
+                  <th>Durum</th>
+                  <th>Tarih</th>
+                  <th>İşlemler</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr id="kayit-1">
+                  <td><strong>#0001</strong></td>
+                  <td>Ahmet Yılmaz</td>
+                  <td><span class="kategori-tag">Elektronik</span><br/>Laptop / Dell</td>
+                  <td>Ekran açılmıyor</td>
+                  <td>
+                    <span class="malzeme-tag">LCD Panel ×1</span>
+                    <span class="malzeme-tag">Termal Macun ×1</span>
+                  </td>
+                  <td><span class="badge badge-bekliyor" id="durum-1">Bekliyor</span></td>
+                  <td>19.05.2026</td>
+                  <td style="display:flex; align-items:center; gap:4px;">
+                    <button class="tbl-btn edit" onclick="editAc(1)">✏️</button>
+                    <button class="tbl-btn delete">🗑️</button>
+                    <button class="btn-isi-al" id="isiAl-1" onclick="isiAl(1)">
+                      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 11V6a2 2 0 00-2-2 2 2 0 00-2 2v0M14 10V4a2 2 0 00-2-2 2 2 0 00-2 2v2M10 10.5V6a2 2 0 00-2-2 2 2 0 00-2 2v8l3 3h2.5a4 4 0 004-4v-1a2 2 0 00-2-2h-1z"/></svg>
+                      İşi Al
+                    </button>
+                  </td>
+                </tr>
+                <tr id="kayit-2" class="devam-ediyor">
+                  <td><strong>#0002</strong></td>
+                  <td>Fatma Kaya</td>
+                  <td><span class="kategori-tag">Elektronik</span><br/>Telefon / Samsung</td>
+                  <td>Şarj olmuyor</td>
+                  <td><span class="malzeme-tag">Şarj Soketi ×1</span></td>
+                  <td><span class="badge badge-devam" id="durum-2">Devam Ediyor</span></td>
+                  <td>18.05.2026</td>
+                  <td style="display:flex; align-items:center; gap:4px;">
+                    <button class="tbl-btn edit" onclick="editAc(2)">✏️</button>
+                    <button class="tbl-btn delete">🗑️</button>
+                  </td>
+                </tr>
+                <tr id="kayit-4">
+                  <td><strong>#0004</strong></td>
+                  <td>Zeynep Arslan</td>
+                  <td><span class="kategori-tag">Otomotiv</span><br/>Otomobil / Ford</td>
+                  <td>Far çalışmıyor</td>
+                  <td><span class="malzeme-tag">Far Ampulü ×2</span></td>
+                  <td><span class="badge badge-bekliyor" id="durum-4">Bekliyor</span></td>
+                  <td>20.05.2026</td>
+                  <td style="display:flex; align-items:center; gap:4px;">
+                    <button class="tbl-btn edit" onclick="editAc(4)">✏️</button>
+                    <button class="tbl-btn delete">🗑️</button>
+                    <button class="btn-isi-al" id="isiAl-4" onclick="isiAl(4)">
+                      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 11V6a2 2 0 00-2-2 2 2 0 00-2 2v0M14 10V4a2 2 0 00-2-2 2 2 0 00-2 2v2M10 10.5V6a2 2 0 00-2-2 2 2 0 00-2 2v8l3 3h2.5a4 4 0 004-4v-1a2 2 0 00-2-2h-1z"/></svg>
+                      İşi Al
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="pagination">
+          <button class="page-btn">‹</button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <button class="page-btn">›</button>
         </div>
       </div>
 
-      <div class="pagination">
-        <button class="page-btn">‹</button>
-        <button class="page-btn active">1</button>
-        <button class="page-btn">2</button>
-        <button class="page-btn">3</button>
-        <button class="page-btn">›</button>
+      <!-- ARŞİV SEKMESİ -->
+      <div id="sekme-arsiv" style="display:none;">
+        <div style="background:rgba(100,116,139,0.07); border:1.5px solid rgba(100,116,139,0.18); border-radius:var(--radius-sm); padding:9px 14px; font-size:12.5px; color:var(--text-muted); margin-bottom:14px; display:flex; align-items:center; gap:8px;">
+          🗂️ Son 30 günde tamamlanan servis kayıtları gösterilmektedir.
+        </div>
+
+        <div class="action-bar">
+          <div class="filter-bar" style="margin-bottom:0;">
+            <input type="text" placeholder="🔍  Müşteri, cihaz veya iş emri ara…" />
+            <input type="date" title="Başlangıç tarihi" />
+            <input type="date" title="Bitiş tarihi" />
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>İş Emri No</th>
+                  <th>Müşteri</th>
+                  <th>Kategori / Cihaz</th>
+                  <th>Arıza Tanımı</th>
+                  <th>Kullanılan Malzeme</th>
+                  <th>Tamamlanma Tarihi</th>
+                  <th>Teknisyen</th>
+                  <th>İşlemler</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr id="kayit-3">
+                  <td><strong>#0003</strong></td>
+                  <td>Mehmet Demir</td>
+                  <td><span class="kategori-tag">Beyaz Eşya</span><br/>Çamaşır Makinesi / Arçelik</td>
+                  <td>Su almıyor</td>
+                  <td><span class="malzeme-tag">Su Vanası ×1</span></td>
+                  <td>17.05.2026</td>
+                  <td><span style="font-size:13px; font-weight:500;">Ali Kara</span></td>
+                  <td style="display:flex; align-items:center; gap:4px;">
+                    <button class="tbl-btn edit" onclick="editAc(3)">✏️</button>
+                    <button class="tbl-btn delete">🗑️</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="pagination">
+          <button class="page-btn">‹</button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">›</button>
+        </div>
       </div>
+
     </main>
   </div>
 
@@ -674,6 +464,11 @@
 
   <script src="../js/main.js"></script>
   <script>
+    function adminToggle() {
+      var s = document.getElementById('adminSubmenu'), c = document.getElementById('adminChevron');
+      s.classList.toggle('acik');
+      c.style.transform = s.classList.contains('acik') ? 'rotate(180deg)' : 'rotate(0deg)';
+    }
     // ── Kategori → Cihaz Türleri eşleşmesi ──
     // Backend bağlandığında bu veri API'den gelecek
     var kategoriVerisi = {
@@ -691,6 +486,14 @@
       3: { no:'#0003', musteri:'Mehmet Demir', telefon:'0555 333 44 55', kategori:'beyaz-esya', cihazTuru:'Çamaşır Makinesi', marka:'Arçelik 8 kg', durum:'tamamlandi', tarih:'2026-05-17', ariza:'Su almıyor.', not:'Vana değiştirildi.', personel:{ ad:'Ali Kara', rol:'Teknisyen', initials:'AK' } },
       4: { no:'#0004', musteri:'Zeynep Arslan',telefon:'0533 444 55 66', kategori:'otomotiv', cihazTuru:'Otomobil', marka:'Ford Focus', durum:'bekliyor', tarih:'2026-05-20', ariza:'Far çalışmıyor.', not:'', personel: null }
     };
+
+    // ── Sekme geçişi ──
+    function sekmeAc(sekme) {
+      document.getElementById('sekme-aktif').style.display = sekme === 'aktif' ? 'block' : 'none';
+      document.getElementById('sekme-arsiv').style.display = sekme === 'arsiv' ? 'block' : 'none';
+      document.getElementById('tab-aktif').classList.toggle('active', sekme === 'aktif');
+      document.getElementById('tab-arsiv').classList.toggle('active', sekme === 'arsiv');
+    }
 
     // ── Modal aç/kapat ──
     function modalAc(id)   { document.getElementById(id).classList.add('open'); }

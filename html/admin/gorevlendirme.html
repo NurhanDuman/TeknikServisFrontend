@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Görevlendirme – ServisTakip Admin</title>
+  <link rel="stylesheet" href="../../css/style.css"/>
+  <link rel="stylesheet" href="../../css/admin.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar-logo"><h2><span>Servis</span>Takip</h2></div>
+    <p class="sidebar-menu-label">Ana Menü</p>
+    <ul class="sidebar-menu">
+      <li><a href="../index.html"><svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</a></li>
+      <li><a href="../servis-kayitlari.html"><svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>Servis Kayıtları</a></li>
+      <li><a href="../randevular.html"><svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Randevular</a></li>
+    </ul>
+    <div class="sidebar-divider"></div>
+    <p class="sidebar-menu-label">Yönetim</p>
+    <ul class="sidebar-menu">
+      <li><a class="admin-toggle" onclick="adminToggle()" id="adminToggleBtn"><svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Admin Panel<svg id="adminChevron" style="margin-left:auto;width:14px;height:14px;transition:transform 0.25s;transform:rotate(180deg);" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></a></li>
+    </ul>
+    <ul class="admin-submenu acik" id="adminSubmenu">
+      <li><a href="personel.html" class="submenu-item"><svg style="width:15px;height:15px;flex-shrink:0;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Personel</a></li>
+      <li><a href="kategoriler.html" class="submenu-item"><svg style="width:15px;height:15px;flex-shrink:0;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h10"/></svg>Kategoriler</a></li>
+      <li><a href="gorevlendirme.html" class="submenu-item active"><svg style="width:15px;height:15px;flex-shrink:0;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Görevlendirme</a></li>
+    </ul>
+    <div class="sidebar-footer">v1.0.0 © 2026</div>
+  </aside>
+
+  <div class="main-wrapper">
+    <nav class="navbar">
+      <span class="navbar-title">Teknik Servis Yönetim Paneli</span>
+      <div class="navbar-right">
+        <span>Admin Paneli</span>
+        <div class="avatar" style="background:#8b5cf6;">AD</div>
+      </div>
+    </nav>
+
+    <main class="page-content">
+      <div class="page-header">
+        <h1>Görevlendirme</h1>
+        <p>İş emirlerine personel atayın. Bir iş emrine tıklayarak personel seçin.</p>
+      </div>
+
+      <div class="filter-bar">
+        <input type="text" placeholder="🔍  İş emri veya müşteri ara…"/>
+        <select><option value="">Tüm Durumlar</option><option>Bekliyor</option><option>Devam Ediyor</option></select>
+        <select><option value="">Tüm Atamalar</option><option>Atanmış</option><option>Atanmamış</option></select>
+      </div>
+
+      <div class="table-card">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>İş Emri No</th>
+                <th>Müşteri</th>
+                <th>Kategori / Cihaz</th>
+                <th>Arıza</th>
+                <th>Durum</th>
+                <th>Atanan Personel</th>
+                <th>Tarih</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="is-satiri" id="is-1" onclick="gorevlendirmeAc(1)">
+                <td><strong>#0001</strong></td>
+                <td>Ahmet Yılmaz</td>
+                <td>Elektronik / Laptop</td>
+                <td>Ekran açılmıyor</td>
+                <td><span class="badge badge-bekliyor">Bekliyor</span></td>
+                <td><span class="atanmadi" id="atanan-1">— Atanmadı</span></td>
+                <td>19.05.2026</td>
+              </tr>
+              <tr class="is-satiri" id="is-2" onclick="gorevlendirmeAc(2)">
+                <td><strong>#0002</strong></td>
+                <td>Fatma Kaya</td>
+                <td>Elektronik / Telefon</td>
+                <td>Şarj olmuyor</td>
+                <td><span class="badge badge-devam">Devam Ediyor</span></td>
+                <td><span class="atanan-tag" id="atanan-2">👤 Ali Kara</span></td>
+                <td>18.05.2026</td>
+              </tr>
+
+              <tr class="is-satiri" id="is-4" onclick="gorevlendirmeAc(4)">
+                <td><strong>#0004</strong></td>
+                <td>Zeynep Arslan</td>
+                <td>Otomotiv / Otomobil</td>
+                <td>Far çalışmıyor</td>
+                <td><span class="badge badge-bekliyor">Bekliyor</span></td>
+                <td><span class="atanmadi" id="atanan-4">— Atanmadı</span></td>
+                <td>20.05.2026</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="tablo-ipucu">💡 Personel atamak için bir iş emrine tıklayın.</div>
+      </div>
+    </main>
+  </div>
+
+  <!-- PERSONEL SEÇİM MODAL -->
+  <div class="modal-overlay" id="gorevModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Personel Ata — <span id="gorevBaslik" style="color:var(--accent-blue);">#0001</span></h2>
+        <button class="modal-close" onclick="modalKapat('gorevModal')">×</button>
+      </div>
+
+      <div class="is-ozeti">
+        <div class="is-ozeti-baslik" id="gorevIsAdi"></div>
+        <div class="is-ozeti-detay">
+          <span id="gorevAriza"></span>
+          <span id="gorevDurum"></span>
+        </div>
+      </div>
+
+      <div style="padding:16px 24px 4px;font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">
+        Personel Seçin
+      </div>
+
+      <div class="personel-secim-listesi" id="personelSecimListesi"></div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="modalKapat('gorevModal')">İptal</button>
+        <button class="btn btn-primary" onclick="gorevlendirmeKaydet()">Ata</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast green" id="toast">
+    <span>✅</span><span id="toastMesaj">Görevlendirme tamamlandı</span>
+  </div>
+
+  <script src="../../js/main.js"></script>
+  <script>
+    var personeller = [
+      { id:1, ad:'Ali Kara',       initials:'AK', rol:'Teknisyen',        durum:'mesgul', aktifIs:2, renk:''       },
+      { id:2, ad:'Mehmet Yıldız',  initials:'MY', rol:'Servis Görevlisi', durum:'mesgul', aktifIs:1, renk:'green'  },
+      { id:3, ad:'Selin Çelik',    initials:'SC', rol:'Teknisyen',        durum:'musait', aktifIs:0, renk:'purple' },
+      { id:4, ad:'Kemal Doğan',    initials:'KD', rol:'Servis Görevlisi', durum:'izin',   aktifIs:0, renk:'orange' }
+    ];
+
+    var isler = {
+      1: { no:'#0001', musteri:'Ahmet Yılmaz', cihaz:'Laptop',           ariza:'Ekran açılmıyor', durum:'Bekliyor'     },
+      2: { no:'#0002', musteri:'Fatma Kaya',   cihaz:'Akıllı Telefon',   ariza:'Şarj olmuyor',    durum:'Devam Ediyor' },
+      4: { no:'#0004', musteri:'Zeynep Arslan',cihaz:'Otomobil',         ariza:'Far çalışmıyor',  durum:'Bekliyor'     }
+    };
+
+    var seciliIsId = null;
+    var seciliPersonelId = null;
+    var durumLabel = { mesgul:'aktif iş', musait:'Müsait', izin:'İzinde' };
+
+    function gorevlendirmeAc(isId) {
+      seciliIsId = isId;
+      seciliPersonelId = null;
+      var is = isler[isId];
+
+      document.querySelectorAll('.is-satiri').forEach(function(r) { r.classList.remove('secili'); });
+      document.getElementById('is-' + isId).classList.add('secili');
+
+      document.getElementById('gorevBaslik').textContent = is.no;
+      document.getElementById('gorevIsAdi').textContent  = is.musteri + ' — ' + is.cihaz;
+      document.getElementById('gorevAriza').textContent  = is.ariza;
+      document.getElementById('gorevDurum').textContent  = is.durum;
+
+      var liste = document.getElementById('personelSecimListesi');
+      liste.innerHTML = '';
+      personeller.forEach(function(p) {
+        var durumText = p.durum === 'mesgul' ? p.aktifIs + ' aktif iş' : durumLabel[p.durum];
+        liste.innerHTML +=
+          '<div class="personel-secim-karti" id="pKart-' + p.id + '" onclick="personelSec(' + p.id + ')">' +
+            '<div class="ps-avatar ' + p.renk + '">' + p.initials + '</div>' +
+            '<div class="ps-bilgi">' +
+              '<div class="ps-ad">' + p.ad + '</div>' +
+              '<div class="ps-rol">' + p.rol + '</div>' +
+            '</div>' +
+            '<span class="ps-durum ' + p.durum + '">' + durumText + '</span>' +
+            '<div class="ps-check" id="pCheck-' + p.id + '">✓</div>' +
+          '</div>';
+      });
+
+      modalAc('gorevModal');
+    }
+
+    function personelSec(personelId) {
+      document.querySelectorAll('.personel-secim-karti').forEach(function(k) { k.classList.remove('secili'); });
+      seciliPersonelId = personelId;
+      document.getElementById('pKart-' + personelId).classList.add('secili');
+    }
+
+    function gorevlendirmeKaydet() {
+      if (!seciliPersonelId) { alert('Lütfen bir personel seçin.'); return; }
+      var p = personeller.find(function(x) { return x.id === seciliPersonelId; });
+      var el = document.getElementById('atanan-' + seciliIsId);
+      el.className = 'atanan-tag';
+      el.textContent = '👤 ' + p.ad;
+      modalKapat('gorevModal');
+      toastGoster(isler[seciliIsId].no + ' — ' + p.ad + ' olarak atandı.');
+    }
+
+    function toastGoster(mesaj) {
+      var t = document.getElementById('toast');
+      document.getElementById('toastMesaj').textContent = mesaj;
+      t.classList.add('show');
+      setTimeout(function() { t.classList.remove('show'); }, 2800);
+    }
+
+    function adminToggle() {
+      var s = document.getElementById('adminSubmenu'), c = document.getElementById('adminChevron');
+      s.classList.toggle('acik');
+      c.style.transform = s.classList.contains('acik') ? 'rotate(180deg)' : 'rotate(0deg)';
+    }
+    function modalAc(id)    { document.getElementById(id).classList.add('open'); }
+    function modalKapat(id) { document.getElementById(id).classList.remove('open'); }
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') modalKapat('gorevModal'); });
+  </script>
+</body>
+</html>
