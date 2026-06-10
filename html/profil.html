@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profilim – ServisTakip</title>
+  <link rel="stylesheet" href="../css/profil.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-servis">Servis</span><span class="brand-takip">Takip</span>
+    </div>
+    <nav class="sidebar-nav">
+      <p class="nav-label">ANA MENÜ</p>
+      <a href="musteri.html" class="nav-item">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        </span> Ana Sayfa
+      </a>
+      <a href="musteri-servis-kayitlari.html" class="nav-item">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+        </span> Servis Kayıtlarım
+      </a>
+      <a href="musteri-randevu.html" class="nav-item">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </span> Randevularım
+      </a>
+      <a href="profil.html" class="nav-item active">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </span> Profilim
+      </a>
+    </nav>
+    <div class="sidebar-footer">v1.0.0 © 2026</div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1 class="page-title">Profilim</h1>
+        <p class="page-sub">Hesap bilgilerinizi ve tercihlerinizi yönetin</p>
+      </div>
+      <div class="topbar-right">
+        <a href="profil.html" class="user-badge" style="text-decoration:none; cursor:pointer;">
+          <div class="user-avatar">AK</div>
+          <div class="user-info">
+            <span class="user-name">Ahmet Kaya</span>
+            <span class="user-role">Müşteri</span>
+          </div>
+        </a>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- Hero -->
+      <div class="profile-hero">
+        <div class="profile-avatar-big">AK</div>
+        <div class="profile-hero-info">
+          <h2>Ahmet Kaya</h2>
+          <p>ahmet.kaya@email.com · Üye: Ocak 2025</p>
+        </div>
+      </div>
+
+      <div class="profile-grid">
+
+        <!-- Kişisel Bilgiler -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Kişisel Bilgiler</h2>
+            <button class="btn btn-sm btn-outline" id="edit-btn" onclick="startEdit()">✏️ Düzenle</button>
+          </div>
+
+          <div id="info-form">
+            <div class="form-group">
+              <label>Ad Soyad</label>
+              <input type="text" class="form-control" id="fullname" value="Ahmet Kaya" disabled/>
+            </div>
+            <div class="form-group">
+              <label>E-posta</label>
+              <input type="email" class="form-control" id="email" value="ahmet.kaya@email.com" disabled/>
+              <span class="form-hint">E-posta değişikliği doğrulama gerektirir.</span>
+            </div>
+            <div class="form-group">
+              <label>Telefon</label>
+              <input type="tel" class="form-control" id="phone" value="0532 123 45 67" disabled/>
+            </div>
+            <div class="form-group">
+              <label>Adres</label>
+              <input type="text" class="form-control" id="address" value="Nilüfer, Bursa" disabled/>
+            </div>
+            <div class="form-actions" id="info-actions" style="display:none;">
+              <button class="btn btn-outline btn-sm" onclick="cancelEdit('info-form', this)">İptal</button>
+              <button class="btn btn-primary btn-sm" onclick="saveInfo()">💾 Kaydet</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Güvenlik -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Güvenlik</h2>
+          </div>
+
+          <div class="security-item">
+            <div class="sec-info">
+              <p>Şifre</p>
+              <span>Son değişiklik: 3 ay önce</span>
+            </div>
+            <button class="btn btn-sm btn-outline" onclick="togglePassForm()">Değiştir</button>
+          </div>
+
+          <div id="pass-form" style="display:none; padding-top:16px;">
+            <div class="form-group">
+              <label>Mevcut Şifre</label>
+              <input type="password" class="form-control" placeholder="••••••••"/>
+            </div>
+            <div class="form-group">
+              <label>Yeni Şifre</label>
+              <input type="password" class="form-control" placeholder="En az 8 karakter"/>
+            </div>
+            <div class="form-group">
+              <label>Yeni Şifre (Tekrar)</label>
+              <input type="password" class="form-control" placeholder="••••••••"/>
+            </div>
+            <div class="form-actions">
+              <button class="btn btn-outline btn-sm" onclick="togglePassForm()">İptal</button>
+              <button class="btn btn-primary btn-sm" onclick="savePass()">🔒 Güncelle</button>
+            </div>
+          </div>
+
+
+        </div>
+
+        <!-- Hesap İşlemleri -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Hesap İşlemleri</h2>
+          </div>
+
+<div class="security-item">
+            <div class="sec-info">
+              <p>Oturumu Kapat</p>
+              <span>Hesabınızdan güvenli çıkış yapın</span>
+            </div>
+            <a href="../../index.html" class="btn btn-sm btn-outline">Çıkış Yap</a>
+          </div>
+          <div class="security-item">
+            <div class="sec-info">
+              <p style="color:var(--red)">Hesabı Sil</p>
+              <span>Bu işlem geri alınamaz</span>
+            </div>
+            <button class="btn btn-sm btn-danger" onclick="confirmDelete()">Hesabı Sil</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script>
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = '✅ ' + msg;
+      t.classList.remove('hidden');
+      setTimeout(() => t.classList.add('hidden'), 3500);
+    }
+
+    function startEdit() {
+      document.querySelectorAll('#info-form input').forEach(i => i.disabled = false);
+      document.getElementById('info-actions').style.display = 'flex';
+      document.getElementById('edit-btn').style.display = 'none';
+    }
+
+    function cancelEdit(formId, btn) {
+      document.querySelectorAll('#info-form input').forEach(i => i.disabled = true);
+      document.getElementById('info-actions').style.display = 'none';
+      document.getElementById('edit-btn').style.display = 'inline-flex';
+    }
+
+    function saveInfo() {
+      document.querySelectorAll('#info-form input').forEach(i => i.disabled = true);
+      document.getElementById('info-actions').style.display = 'none';
+      document.getElementById('edit-btn').style.display = 'inline-flex';
+      showToast('Bilgileriniz güncellendi!');
+    }
+
+    function toggleEdit(formId, btn) {} // artık kullanılmıyor
+
+    function togglePassForm() {
+      const f = document.getElementById('pass-form');
+      f.style.display = f.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function savePass() {
+      document.getElementById('pass-form').style.display = 'none';
+      showToast('Şifreniz başarıyla değiştirildi!');
+    }
+
+function confirmDelete() {
+      if (confirm('Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.')) {
+        showToast('Hesap silme talebiniz alındı.');
+      }
+    }
+  </script>
+</body>
+</html>

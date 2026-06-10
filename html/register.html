@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kayıt Ol – ServisTakip</title>
+  <link rel="stylesheet" href="../css/login.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    /* Register-specific extras */
+    .name-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .pw-strength {
+      margin-top: 6px;
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+    .pw-strength-bars {
+      display: flex;
+      gap: 4px;
+      flex: 1;
+    }
+    .pw-bar {
+      height: 4px;
+      flex: 1;
+      border-radius: 2px;
+      background: var(--border);
+      transition: background 0.3s;
+    }
+    .pw-bar.weak   { background: #ef4444; }
+    .pw-bar.medium { background: var(--warning); }
+    .pw-bar.strong { background: var(--success); }
+    .pw-strength-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      min-width: 44px;
+      text-align: right;
+    }
+    .terms-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      line-height: 1.5;
+    }
+    .terms-label input { display: none; }
+    .terms-label .checkmark { margin-top: 2px; flex-shrink: 0; }
+    .terms-label a { color: var(--accent); font-weight: 600; text-decoration: none; }
+    .terms-label a:hover { text-decoration: underline; }
+    .login-card-header .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      margin-bottom: 20px;
+      transition: color 0.2s;
+    }
+    .login-card-header .back-link:hover { color: var(--accent); }
+    @media (max-width: 480px) {
+      .name-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-wrapper">
+    <!-- Sol panel -->
+    <div class="login-left">
+      <div class="brand">
+        <span class="brand-servis">Servis</span><span class="brand-takip">Takip</span>
+      </div>
+      <div class="left-content">
+        <h1>Hızlıca<br/>Başlayın</h1>
+        <p>Birkaç adımda hesabınızı oluşturun ve servis yönetimini hemen kullanmaya başlayın.</p>
+        <ul class="feature-list">
+          <li><span class="icon">⚡</span> Anlık servis durumu takibi</li>
+          <li><span class="icon">📅</span> Kolay randevu yönetimi</li>
+          <li><span class="icon">📦</span> Stok ve parça takibi</li>
+          <li><span class="icon">👥</span> Müşteri geçmişi ve raporlar</li>
+        </ul>
+      </div>
+      <div class="left-footer">v1.0.0 © 2026 ServisTakip</div>
+    </div>
+
+    <!-- Sağ panel -->
+    <div class="login-right">
+      <div class="login-card" style="max-width:480px;">
+        <div class="login-card-header">
+          <a href="login.html" class="back-link">← Girişe Dön</a>
+          <h2>Hesap Oluştur</h2>
+          <p>Bilgilerinizi girerek kayıt olun</p>
+        </div>
+
+        <div class="role-tabs">
+          <button class="role-tab active" onclick="setRole('personel', this)">Personel</button>
+          <button class="role-tab" onclick="setRole('musteri', this)">Müşteri</button>
+        </div>
+
+        <form class="login-form" onsubmit="handleRegister(event)">
+          <div class="name-row">
+            <div class="form-group">
+              <label for="firstname">Ad</label>
+              <div class="input-wrapper">
+                <span class="input-icon">👤</span>
+                <input type="text" id="firstname" placeholder="Adınız" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="lastname">Soyad</label>
+              <div class="input-wrapper">
+                <span class="input-icon">👤</span>
+                <input type="text" id="lastname" placeholder="Soyadınız" required />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">E-posta Adresi</label>
+            <div class="input-wrapper">
+              <span class="input-icon">✉</span>
+              <input type="email" id="email" placeholder="ornek@email.com" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Telefon <span style="font-weight:400;color:var(--text-secondary)">(isteğe bağlı)</span></label>
+            <div class="input-wrapper">
+              <span class="input-icon">📞</span>
+              <input type="tel" id="phone" placeholder="05xx xxx xx xx" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Şifre</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="password" placeholder="En az 8 karakter" required oninput="checkStrength(this.value)" />
+              <button type="button" class="toggle-pw" onclick="togglePassword('password')">👁</button>
+            </div>
+            <div class="pw-strength" id="strengthMeter" style="display:none;">
+              <div class="pw-strength-bars">
+                <div class="pw-bar" id="bar1"></div>
+                <div class="pw-bar" id="bar2"></div>
+                <div class="pw-bar" id="bar3"></div>
+              </div>
+              <span class="pw-strength-label" id="strengthLabel"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password2">Şifre Tekrar</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="password2" placeholder="Şifrenizi tekrar girin" required />
+              <button type="button" class="toggle-pw" onclick="togglePassword('password2')">👁</button>
+            </div>
+          </div>
+
+          <label class="terms-label">
+            <input type="checkbox" id="terms" required />
+            <span class="checkmark"></span>
+            <span><a href="#">Kullanım Koşulları</a>'nı ve <a href="#">Gizlilik Politikası</a>'nı okudum, kabul ediyorum.</span>
+          </label>
+
+          <button type="submit" class="btn-login">
+            <span class="btn-text">Kayıt Ol</span>
+            <span class="btn-icon">→</span>
+          </button>
+        </form>
+
+        <div class="login-divider"><span>veya</span></div>
+
+        <p class="register-prompt">
+          Zaten hesabınız var mı? <a href="login.html">Giriş Yapın</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function setRole(role, btn) {
+      document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function togglePassword(id) {
+      const pw = document.getElementById(id);
+      pw.type = pw.type === 'password' ? 'text' : 'password';
+    }
+
+    function checkStrength(val) {
+      const meter = document.getElementById('strengthMeter');
+      const label = document.getElementById('strengthLabel');
+      const bars = [document.getElementById('bar1'), document.getElementById('bar2'), document.getElementById('bar3')];
+
+      if (!val) { meter.style.display = 'none'; return; }
+      meter.style.display = 'flex';
+
+      let score = 0;
+      if (val.length >= 8) score++;
+      if (/[A-Z]/.test(val) && /[a-z]/.test(val)) score++;
+      if (/[0-9]/.test(val) || /[^A-Za-z0-9]/.test(val)) score++;
+
+      const states = ['weak', 'medium', 'strong'];
+      const labels = ['Zayıf', 'Orta', 'Güçlü'];
+
+      bars.forEach((b, i) => {
+        b.className = 'pw-bar';
+        if (i < score) b.classList.add(states[score - 1]);
+      });
+      label.textContent = labels[score - 1] || '';
+      label.style.color = score === 1 ? '#ef4444' : score === 2 ? '#f59e0b' : '#10b981';
+    }
+
+    function handleRegister(e) {
+      e.preventDefault();
+      const pw1 = document.getElementById('password').value;
+      const pw2 = document.getElementById('password2').value;
+      if (pw1 !== pw2) {
+        document.getElementById('password2').style.borderColor = '#ef4444';
+        document.getElementById('password2').style.boxShadow = '0 0 0 3px rgba(239,68,68,0.12)';
+        document.getElementById('password2').placeholder = 'Şifreler eşleşmiyor!';
+        return;
+      }
+      const btn = document.querySelector('.btn-login');
+      btn.classList.add('loading');
+      btn.querySelector('.btn-text').textContent = 'Kayıt yapılıyor...';
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 1200);
+    }
+  </script>
+</body>
+</html>

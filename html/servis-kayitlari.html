@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Servis Kayıtları – ServisTakip</title>
   <link rel="stylesheet" href="../css/style.css" />
+
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="../css/servis-kayitlari.css" />
 </head>
@@ -47,6 +48,12 @@
           Randevular
         </a>
       </li>
+      <li>
+        <a href="personel-profil.html">
+          <svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profilim
+        </a>
+      </li>
     </ul>
     <div class="sidebar-divider"></div>
     <p class="sidebar-menu-label">Yönetim</p>
@@ -73,7 +80,9 @@
       <span class="navbar-title">Teknik Servis Yönetim Paneli</span>
       <div class="navbar-right">
         <span>Personel Paneli</span>
-        <div class="avatar">PP</div>
+        <a href="personel-profil.html" style="text-decoration:none;" title="Profilim">
+          <div class="avatar" style="cursor:pointer;">PP</div>
+        </a>
       </div>
     </nav>
 
@@ -464,30 +473,7 @@
 
   <script src="../js/main.js"></script>
   <script>
-    function adminToggle() {
-      var s = document.getElementById('adminSubmenu'), c = document.getElementById('adminChevron');
-      s.classList.toggle('acik');
-      c.style.transform = s.classList.contains('acik') ? 'rotate(180deg)' : 'rotate(0deg)';
-    }
-    // ── Kategori → Cihaz Türleri eşleşmesi ──
-    // Backend bağlandığında bu veri API'den gelecek
-    var kategoriVerisi = {
-      'elektronik':     ['Laptop', 'Masaüstü Bilgisayar', 'Tablet', 'Akıllı Telefon', 'Yazıcı', 'Monitör', 'TV / Ekran', 'Diğer'],
-      'beyaz-esya':     ['Çamaşır Makinesi', 'Bulaşık Makinesi', 'Buzdolabı', 'Fırın / Ocak', 'Kurutma Makinesi', 'Mikrodalga', 'Diğer'],
-      'otomotiv':       ['Otomobil', 'Motosiklet', 'Kamyonet', 'Elektrikli Araç', 'Scooter', 'Diğer'],
-      'iklimlendirme':  ['Klima (Split)', 'Merkezi Sistem', 'Fan Coil', 'Isı Pompası', 'Diğer'],
-      'diger':          ['Diğer']
-    };
-
-    // ── Örnek kayıt verisi ──
-    var kayitlar = {
-      1: { no:'#0001', musteri:'Ahmet Yılmaz', telefon:'0532 111 22 33', kategori:'elektronik', cihazTuru:'Laptop', marka:'Dell XPS 15', durum:'bekliyor', tarih:'2026-05-19', ariza:'Ekran açılmıyor.', not:'', personel: null },
-      2: { no:'#0002', musteri:'Fatma Kaya',   telefon:'0544 222 33 44', kategori:'elektronik', cihazTuru:'Akıllı Telefon', marka:'Samsung Galaxy S22', durum:'devam', tarih:'2026-05-18', ariza:'Şarj olmuyor.', not:'Soket değiştirildi.', personel:{ ad:'Ali Kara', rol:'Teknisyen', initials:'AK' } },
-      3: { no:'#0003', musteri:'Mehmet Demir', telefon:'0555 333 44 55', kategori:'beyaz-esya', cihazTuru:'Çamaşır Makinesi', marka:'Arçelik 8 kg', durum:'tamamlandi', tarih:'2026-05-17', ariza:'Su almıyor.', not:'Vana değiştirildi.', personel:{ ad:'Ali Kara', rol:'Teknisyen', initials:'AK' } },
-      4: { no:'#0004', musteri:'Zeynep Arslan',telefon:'0533 444 55 66', kategori:'otomotiv', cihazTuru:'Otomobil', marka:'Ford Focus', durum:'bekliyor', tarih:'2026-05-20', ariza:'Far çalışmıyor.', not:'', personel: null }
-    };
-
-    // ── Sekme geçişi ──
+    // ── Sekme geçişi ──────────────────────────────────────────────
     function sekmeAc(sekme) {
       document.getElementById('sekme-aktif').style.display = sekme === 'aktif' ? 'block' : 'none';
       document.getElementById('sekme-arsiv').style.display = sekme === 'arsiv' ? 'block' : 'none';
@@ -495,123 +481,136 @@
       document.getElementById('tab-arsiv').classList.toggle('active', sekme === 'arsiv');
     }
 
-    // ── Modal aç/kapat ──
-    function modalAc(id)   { document.getElementById(id).classList.add('open'); }
-    function modalKapat(id){ document.getElementById(id).classList.remove('open'); }
-
-    // ── Toast ──
-    function toastGoster(mesaj) {
-      var t = document.getElementById('toast');
-      document.getElementById('toastMesaj').textContent = mesaj;
-      t.classList.add('show');
-      setTimeout(function(){ t.classList.remove('show'); }, 2800);
+    // ── Modal aç / kapat ──────────────────────────────────────────
+    function modalAc(id) {
+      var m = document.getElementById(id);
+      if (m) m.classList.add('open');
+    }
+    function modalKapat(id) {
+      var m = document.getElementById(id);
+      if (m) m.classList.remove('open');
     }
 
-    // ── Malzeme satırı ekle ──
-    function malzemeEkle(listeId) {
-      var liste = document.getElementById(listeId);
-      var row = document.createElement('div');
-      row.className = 'malzeme-row';
-      row.innerHTML =
-        '<input type="text" placeholder="Malzeme adı" />' +
-        '<input type="number" placeholder="Adet" min="1" value="1" />' +
-        '<button class="malzeme-remove" type="button" onclick="this.closest(\'.malzeme-row\').remove()">×</button>';
-      liste.appendChild(row);
-    }
-
-    // ── Kategori değişince cihaz türlerini doldur ──
-    function kategoriDegisti(prefix) {
-      var kategoriSel = document.getElementById(prefix + 'Kategori');
-      var cihazSel    = document.getElementById(prefix + 'CihazTuru');
-      var hint        = document.getElementById(prefix + 'KategoriHint');
-      var secilen     = kategoriSel.value;
-
-      cihazSel.innerHTML = '';
-
-      if (!secilen) {
-        cihazSel.disabled = true;
-        cihazSel.innerHTML = '<option value="">— Önce kategori seçin —</option>';
-        if (hint) hint.classList.add('goster');
-        return;
+    // Overlay'e tıklayınca kapat
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('open');
       }
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.open').forEach(function(m) {
+          m.classList.remove('open');
+        });
+      }
+    });
 
-      if (hint) hint.classList.remove('goster');
-      cihazSel.disabled = false;
+    // ── Kayıt verileri ────────────────────────────────────────────
+    var kayitlar = {
+      1: { musteri: 'Ahmet Yılmaz', telefon: '0532 111 22 33', kategori: 'elektronik',  marka: 'Dell',    ariza: 'Ekran açılmıyor',  tarih: '2026-05-19', durum: 'bekliyor',    personel: null },
+      2: { musteri: 'Fatma Kaya',   telefon: '0535 444 55 66', kategori: 'elektronik',  marka: 'Samsung', ariza: 'Şarj olmuyor',     tarih: '2026-05-18', durum: 'devam',       personel: 'PP' },
+      3: { musteri: 'Mehmet Demir', telefon: '0533 222 33 44', kategori: 'beyaz-esya',  marka: 'Arçelik', ariza: 'Su almıyor',       tarih: '2026-05-17', durum: 'tamamlandi',  personel: 'AK' },
+      4: { musteri: 'Zeynep Arslan',telefon: '0542 777 88 99', kategori: 'otomotiv',    marka: 'Ford',    ariza: 'Far çalışmıyor',   tarih: '2026-05-20', durum: 'bekliyor',    personel: null }
+    };
 
-      var bos = document.createElement('option');
-      bos.value = ''; bos.textContent = '— Cihaz Türü Seçin —';
-      cihazSel.appendChild(bos);
-
-      var turler = kategoriVerisi[secilen] || ['Diğer'];
-      turler.forEach(function(tur) {
-        var opt = document.createElement('option');
-        opt.value = tur; opt.textContent = tur;
-        cihazSel.appendChild(opt);
-      });
-    }
-
-    // ── İşi Al ──
-    function isiAl(id) {
-      var badge = document.getElementById('durum-' + id);
-      badge.textContent = 'Devam Ediyor';
-      badge.className = 'badge badge-devam';
-      document.getElementById('kayit-' + id).classList.add('devam-ediyor');
-      var btn = document.getElementById('isiAl-' + id);
-      if (btn) btn.remove();
-      kayitlar[id].durum = 'devam';
-      kayitlar[id].personel = { ad:'Sen (Aktif Personel)', rol:'Teknisyen', initials:'SP' };
-      toastGoster('İş emri üstlenildi, durum "Devam Ediyor" olarak güncellendi.');
-    }
-
-    // ── Edit modalını aç ve doldur ──
+    // ── Edit modal aç ─────────────────────────────────────────────
     function editAc(id) {
       var k = kayitlar[id];
       if (!k) return;
+      document.getElementById('editBaslik').textContent = '#' + String(id).padStart(4, '0');
+      document.getElementById('editMusteri').value  = k.musteri;
+      document.getElementById('editTelefon').value  = k.telefon;
+      document.getElementById('editKategori').value = k.kategori;
+      document.getElementById('editMarka').value    = k.marka;
+      document.getElementById('editAriza').value    = k.ariza;
+      document.getElementById('editTarih').value    = k.tarih;
+      document.getElementById('editDurum').value    = k.durum;
 
-      document.getElementById('editBaslik').textContent = k.no;
-
-      // Personel kutusu
+      // Personel bilgisi
       var alan = document.getElementById('personelBilgiAlani');
       if (k.personel) {
         alan.className = 'personel-bilgi full-width';
-        alan.innerHTML =
-          '<div class="personel-bilgi-avatar">' + k.personel.initials + '</div>' +
-          '<div class="personel-bilgi-text">' +
-            '<span>' + k.personel.ad + '</span>' +
-            '<span>' + k.personel.rol + ' · İşi Üstlenen</span>' +
-          '</div>';
+        alan.innerHTML = '<div class="personel-bilgi-avatar">' + k.personel + '</div>'
+          + '<div class="personel-bilgi-text"><span>Personel Paneli</span><span>Görevi üstlendi</span></div>';
       } else {
         alan.className = 'personel-bilgi bos full-width';
-        alan.innerHTML =
-          '<div class="personel-bilgi-avatar">—</div>' +
-          '<div class="personel-bilgi-text">' +
-            '<span style="color:var(--text-muted);">Henüz üstlenilmedi</span>' +
-            '<span>Bu kayıt hâlâ beklemede</span>' +
-          '</div>';
+        alan.innerHTML = '<div class="personel-bilgi-avatar">—</div>'
+          + '<div class="personel-bilgi-text"><span>Henüz atanmadı</span><span>İşi Al butonu ile üstlenebilirsiniz</span></div>';
       }
 
-      // Form doldur
-      document.getElementById('editMusteri').value = k.musteri;
-      document.getElementById('editTelefon').value = k.telefon;
-      document.getElementById('editMarka').value   = k.marka;
-      document.getElementById('editAriza').value   = k.ariza;
-      document.getElementById('editNot').value     = k.not;
-      document.getElementById('editTarih').value   = k.tarih;
-      document.getElementById('editDurum').value   = k.durum;
-
-      // Kategori seç → cihaz türlerini doldur → cihaz türünü seç
-      var katSel = document.getElementById('editKategori');
-      katSel.value = k.kategori;
       kategoriDegisti('edit');
-      document.getElementById('editCihazTuru').value = k.cihazTuru;
-
       modalAc('editModal');
     }
 
-    // ESC kapat
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') { modalKapat('editModal'); modalKapat('yeniKayitModal'); }
-    });
+    // ── İşi Al ───────────────────────────────────────────────────
+    function isiAl(id) {
+      var btn = document.getElementById('isiAl-' + id);
+      if (!btn) return;
+      btn.disabled = true;
+      btn.style.opacity = '0.5';
+      btn.textContent = '✓ Alındı';
+      var durum = document.getElementById('durum-' + id);
+      if (durum) {
+        durum.textContent = 'Devam Ediyor';
+        durum.className = 'badge badge-devam';
+      }
+      if (kayitlar[id]) kayitlar[id].personel = 'PP';
+      showToast('İş emri üstlenildi!');
+    }
+
+    // ── Kategori → Cihaz türü doldurucu ──────────────────────────
+    var cihazTurleri = {
+      'elektronik':    ['Laptop', 'Telefon', 'Tablet', 'Masaüstü PC', 'TV', 'Diğer'],
+      'beyaz-esya':    ['Çamaşır Makinesi', 'Bulaşık Makinesi', 'Buzdolabı', 'Fırın', 'Diğer'],
+      'otomotiv':      ['Otomobil', 'Motosiklet', 'Kamyon', 'Diğer'],
+      'iklimlendirme': ['Klima', 'Isı Pompası', 'Havalandırma', 'Diğer'],
+      'diger':         ['Diğer']
+    };
+
+    function kategoriDegisti(prefix) {
+      var katEl  = document.getElementById(prefix === 'edit' ? 'editKategori'  : 'yeniKategori');
+      var cihazEl= document.getElementById(prefix === 'edit' ? 'editCihazTuru' : 'yeniCihazTuru');
+      var hintEl = document.getElementById(prefix === 'edit' ? null            : 'yeniKategoriHint');
+      var kat    = katEl ? katEl.value : '';
+      var turler = cihazTurleri[kat] || [];
+
+      cihazEl.innerHTML = '';
+      if (!kat) {
+        cihazEl.disabled = true;
+        cihazEl.innerHTML = '<option value="">— Önce kategori seçin —</option>';
+        if (hintEl) hintEl.classList.add('goster');
+      } else {
+        cihazEl.disabled = false;
+        turler.forEach(function(t) {
+          var opt = document.createElement('option');
+          opt.value = t.toLowerCase();
+          opt.textContent = t;
+          cihazEl.appendChild(opt);
+        });
+        if (hintEl) hintEl.classList.remove('goster');
+      }
+    }
+
+    // ── Malzeme satırı ekle ───────────────────────────────────────
+    function malzemeEkle(containerId) {
+      var c = document.getElementById(containerId);
+      var row = document.createElement('div');
+      row.className = 'malzeme-row';
+      row.innerHTML = '<input type="text" placeholder="Malzeme adı" />'
+        + '<input type="number" placeholder="Adet" min="1" value="1" />'
+        + '<button class="malzeme-remove" type="button" onclick="this.closest(\'.malzeme-row\').remove()">×</button>';
+      c.appendChild(row);
+    }
+
+    // ── Toast (main.js'deki ile çakışmasın diye local versiyon) ──
+    function showToast(msg) {
+      var t = document.getElementById('toast');
+      var m = document.getElementById('toastMesaj');
+      if (!t || !m) return;
+      m.textContent = msg;
+      t.classList.add('show');
+      setTimeout(function() { t.classList.remove('show'); }, 3000);
+    }
   </script>
 </body>
 </html>

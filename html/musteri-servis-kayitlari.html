@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Servis Kayıtlarım – ServisTakip</title>
+  <link rel="stylesheet" href="../css/musteri.css"/>
+  <link rel="stylesheet" href="../css/musteri-servis-kayitlari.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-servis">Servis</span><span class="brand-takip">Takip</span>
+    </div>
+    <nav class="sidebar-nav">
+      <p class="nav-label">ANA MENÜ</p>
+      <a href="musteri.html" class="nav-item">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        </span> Ana Sayfa
+      </a>
+      <a href="musteri-servis-kayitlari.html" class="nav-item active">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+        </span> Servis Kayıtlarım
+      </a>
+      <a href="musteri-randevu.html" class="nav-item">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </span> Randevularım
+      </a>
+      <a href="profil.html" class="nav-item">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </span> Profilim
+      </a>
+    </nav>
+    <div class="sidebar-footer">v1.0.0 © 2026</div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1 class="page-title">Servis Kayıtlarım</h1>
+        <p class="page-sub">Cihazlarınıza ait tüm servis geçmişini görüntüleyin</p>
+      </div>
+      <div class="topbar-right">
+        <a href="profil.html" class="user-badge" style="text-decoration:none; cursor:pointer;">
+          <div class="user-avatar">AK</div>
+          <div class="user-info">
+            <span class="user-name">Ahmet Kaya</span>
+            <span class="user-role">Müşteri</span>
+          </div>
+        </a>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- Özet kartları -->
+      <div class="summary-row">
+        <div class="summary-card">
+          <span class="summary-icon">🔧</span>
+          <div>
+            <span class="summary-value">8</span>
+            <span class="summary-label">Toplam Servis</span>
+          </div>
+        </div>
+        <div class="summary-card">
+          <span class="summary-icon">✅</span>
+          <div>
+            <span class="summary-value">5</span>
+            <span class="summary-label">Tamamlanan</span>
+          </div>
+        </div>
+        <div class="summary-card">
+          <span class="summary-icon">⏳</span>
+          <div>
+            <span class="summary-value">2</span>
+            <span class="summary-label">Devam Eden</span>
+          </div>
+        </div>
+        <div class="summary-card">
+          <span class="summary-icon">📋</span>
+          <div>
+            <span class="summary-value">1</span>
+            <span class="summary-label">Bekliyor</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Liste kartı -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Tüm Kayıtlar</h2>
+          <div class="filter-tabs">
+            <button class="filter-tab active" onclick="filterRecords('hepsi', this)">Hepsi</button>
+            <button class="filter-tab" onclick="filterRecords('bekliyor', this)">Bekliyor</button>
+            <button class="filter-tab" onclick="filterRecords('devam', this)">Devam Ediyor</button>
+            <button class="filter-tab" onclick="filterRecords('tamamlandi', this)">Tamamlandı</button>
+          </div>
+        </div>
+
+        <div class="record-list" id="record-list">
+
+          <!-- Kayıt 1 -->
+          <div class="record-row" data-status="tamamlandi">
+            <div class="record-left">
+              <div class="record-icon-wrap tamamlandi">✅</div>
+              <div class="record-info">
+                <p class="record-device">iPhone 15 Pro – Batarya Değişimi</p>
+                <p class="record-meta">Servis No: <strong>#SRV-2024</strong> · 20 Mayıs 2026 · Servis Merkezi A</p>
+              </div>
+            </div>
+            <div class="record-right">
+              <span class="badge badge-success">Tamamlandı</span>
+              <button class="btn btn-sm btn-outline" onclick="toggleDetail('d1')">Detay</button>
+            </div>
+            <div class="record-detail" id="d1">
+              <div class="detail-grid">
+                <div class="detail-item"><span>Teknisyen</span><strong>Mehmet Yılmaz</strong></div>
+                <div class="detail-item"><span>Teslim Tarihi</span><strong>22 Mayıs 2026</strong></div>
+                <div class="detail-item"><span>Yapılan İşlem</span><strong>Batarya değişimi (OEM)</strong></div>
+                <div class="detail-item"><span>Ücret</span><strong>850 ₺</strong></div>
+              </div>
+              <p class="detail-note">Cihaz sorunsuz teslim edildi. Batarya kapasitesi %100 olarak ölçüldü.</p>
+            </div>
+          </div>
+
+          <!-- Kayıt 2 -->
+          <div class="record-row" data-status="devam">
+            <div class="record-left">
+              <div class="record-icon-wrap devam">⏳</div>
+              <div class="record-info">
+                <p class="record-device">Samsung Galaxy S22 – Ekran Değişimi</p>
+                <p class="record-meta">Servis No: <strong>#SRV-2025</strong> · 10 Haziran 2026 · Servis Merkezi A</p>
+              </div>
+            </div>
+            <div class="record-right">
+              <span class="badge badge-warning">Devam Ediyor</span>
+              <button class="btn btn-sm btn-outline" onclick="toggleDetail('d2')">Detay</button>
+            </div>
+            <div class="record-detail" id="d2">
+              <div class="detail-grid">
+                <div class="detail-item"><span>Teknisyen</span><strong>Ali Demir</strong></div>
+                <div class="detail-item"><span>Tahmini Teslim</span><strong>14 Haziran 2026</strong></div>
+                <div class="detail-item"><span>Yapılan İşlem</span><strong>Ekran modülü siparişi verildi</strong></div>
+                <div class="detail-item"><span>Ücret</span><strong>Belirsiz</strong></div>
+              </div>
+              <p class="detail-note">Parça tedariki bekleniyor. Geldiğinde SMS ile bildirim yapılacaktır.</p>
+            </div>
+          </div>
+
+          <!-- Kayıt 3 -->
+          <div class="record-row" data-status="bekliyor">
+            <div class="record-left">
+              <div class="record-icon-wrap bekliyor">📋</div>
+              <div class="record-info">
+                <p class="record-device">Lenovo ThinkPad – Genel Bakım</p>
+                <p class="record-meta">Servis No: <strong>#SRV-2026</strong> · 12 Haziran 2026 · Servis Merkezi B</p>
+              </div>
+            </div>
+            <div class="record-right">
+              <span class="badge badge-info">Bekliyor</span>
+              <button class="btn btn-sm btn-outline" onclick="toggleDetail('d3')">Detay</button>
+            </div>
+            <div class="record-detail" id="d3">
+              <div class="detail-grid">
+                <div class="detail-item"><span>Teknisyen</span><strong>Atanmadı</strong></div>
+                <div class="detail-item"><span>Teslim Tarihi</span><strong>–</strong></div>
+                <div class="detail-item"><span>Yapılan İşlem</span><strong>Henüz başlanmadı</strong></div>
+                <div class="detail-item"><span>Ücret</span><strong>–</strong></div>
+              </div>
+              <p class="detail-note">Cihaz teslim alındı, teknisyen ataması bekleniyor.</p>
+            </div>
+          </div>
+
+          <!-- Kayıt 4 -->
+          <div class="record-row" data-status="tamamlandi">
+            <div class="record-left">
+              <div class="record-icon-wrap tamamlandi">✅</div>
+              <div class="record-info">
+                <p class="record-device">iPad Air – Şarj Soketi Tamiri</p>
+                <p class="record-meta">Servis No: <strong>#SRV-2018</strong> · 3 Mart 2026 · Servis Merkezi A</p>
+              </div>
+            </div>
+            <div class="record-right">
+              <span class="badge badge-success">Tamamlandı</span>
+              <button class="btn btn-sm btn-outline" onclick="toggleDetail('d4')">Detay</button>
+            </div>
+            <div class="record-detail" id="d4">
+              <div class="detail-grid">
+                <div class="detail-item"><span>Teknisyen</span><strong>Mehmet Yılmaz</strong></div>
+                <div class="detail-item"><span>Teslim Tarihi</span><strong>5 Mart 2026</strong></div>
+                <div class="detail-item"><span>Yapılan İşlem</span><strong>Lightning soketi değişimi</strong></div>
+                <div class="detail-item"><span>Ücret</span><strong>450 ₺</strong></div>
+              </div>
+              <p class="detail-note">Cihaz sorunsuz teslim edildi.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleDetail(id) {
+      const el = document.getElementById(id);
+      el.classList.toggle('open');
+    }
+
+    function filterRecords(status, btn) {
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.record-row').forEach(row => {
+        row.style.display = (status === 'hepsi' || row.dataset.status === status) ? 'flex' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>

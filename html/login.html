@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Giriş Yap – ServisTakip</title>
+  <link rel="stylesheet" href="../css/login.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <div class="login-wrapper">
+    <!-- Sol panel -->
+    <div class="login-left">
+      <div class="brand">
+        <span class="brand-servis">Servis</span><span class="brand-takip">Takip</span>
+      </div>
+      <div class="left-content">
+        <h1>Teknik Servis<br/>Yönetim Paneli</h1>
+        <p>Servis kayıtlarınızı, randevularınızı ve müşteri işlemlerinizi tek yerden yönetin.</p>
+        <ul class="feature-list">
+          <li><span class="icon">⚡</span> Anlık servis durumu takibi</li>
+          <li><span class="icon">📅</span> Kolay randevu yönetimi</li>
+          <li><span class="icon">📦</span> Stok ve parça takibi</li>
+          <li><span class="icon">👥</span> Müşteri geçmişi ve raporlar</li>
+        </ul>
+      </div>
+      <div class="left-footer">v1.0.0 © 2026 ServisTakip</div>
+    </div>
+
+    <!-- Sağ panel -->
+    <div class="login-right">
+      <div class="login-card">
+        <div class="login-card-header">
+          <h2>Hoş Geldiniz</h2>
+          <p>Hesabınıza giriş yapın</p>
+        </div>
+
+        <div class="role-tabs">
+          <button class="role-tab active" onclick="setRole('personel', this)">Personel</button>
+          <button class="role-tab" onclick="setRole('musteri', this)">Müşteri</button>
+        </div>
+
+        <form class="login-form" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label for="email">E-posta Adresi</label>
+            <div class="input-wrapper">
+              <span class="input-icon">✉</span>
+              <input type="email" id="email" placeholder="ornek@email.com" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">
+              Şifre
+              <a href="forgot-password.html" class="forgot-link">Şifremi Unuttum?</a>
+            </label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="password" placeholder="••••••••" required />
+              <button type="button" class="toggle-pw" onclick="togglePassword()">👁</button>
+            </div>
+          </div>
+
+          <label class="remember-me">
+            <input type="checkbox" id="remember" />
+            <span class="checkmark"></span>
+            Beni Hatırla
+          </label>
+
+          <button type="submit" class="btn-login">
+            <span class="btn-text">Giriş Yap</span>
+            <span class="btn-icon">→</span>
+          </button>
+        </form>
+
+        <div class="login-divider"><span>veya</span></div>
+
+        <p class="register-prompt">
+          Hesabınız yok mu? <a href="register.html">Kayıt Olun</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function setRole(role, btn) {
+      document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    function togglePassword() {
+      const pw = document.getElementById('password');
+      pw.type = pw.type === 'password' ? 'text' : 'password';
+    }
+    function handleLogin(e) {
+      e.preventDefault();
+      const btn = document.querySelector('.btn-login');
+      btn.classList.add('loading');
+      btn.querySelector('.btn-text').textContent = 'Giriş yapılıyor...';
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 1200);
+    }
+  </script>
+</body>
+</html>

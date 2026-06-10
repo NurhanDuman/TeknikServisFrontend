@@ -47,6 +47,12 @@
           Randevular
         </a>
       </li>
+      <li>
+        <a href="personel-profil.html">
+          <svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profilim
+        </a>
+      </li>
     </ul>
     <div class="sidebar-divider"></div>
     <p class="sidebar-menu-label">Yönetim</p>
@@ -74,7 +80,7 @@
       <span class="navbar-title">Teknik Servis Yönetim Paneli</span>
       <div class="navbar-right">
         <span>Personel Paneli</span>
-        <div class="avatar">PP</div>
+        <a href="personel-profil.html" style="text-decoration:none;" title="Profilim"><div class="avatar" style="cursor:pointer;">PP</div></a>
       </div>
     </nav>
 
@@ -217,7 +223,7 @@
                   <td>Laptop teslim alma</td>
                   <td><span class="badge badge-tamamlandi">Tamamlandı</span></td>
                   <td>
-                    <button class="tbl-btn edit" title="Düzenle">✏️</button>
+                    <button class="tbl-btn edit" title="Düzenle" onclick="randevuDuzenle('08.05.2026','10:00','Ahmet Yılmaz','0532 111 22 33','Laptop teslim alma','tamamlandi')">✏️</button>
                     <button class="tbl-btn delete" title="Sil">🗑️</button>
                   </td>
                 </tr>
@@ -229,7 +235,7 @@
                   <td>Telefon servis teslimi</td>
                   <td><span class="badge badge-bekliyor">Bekliyor</span></td>
                   <td>
-                    <button class="tbl-btn edit" title="Düzenle">✏️</button>
+                    <button class="tbl-btn edit" title="Düzenle" onclick="randevuDuzenle('19.05.2026','09:30','Fatma Kaya','0544 222 33 44','Telefon servis teslimi','bekliyor')">✏️</button>
                     <button class="tbl-btn delete" title="Sil">🗑️</button>
                   </td>
                 </tr>
@@ -241,7 +247,7 @@
                   <td>Yazıcı bakım kontrolü</td>
                   <td><span class="badge badge-devam">Devam Ediyor</span></td>
                   <td>
-                    <button class="tbl-btn edit" title="Düzenle">✏️</button>
+                    <button class="tbl-btn edit" title="Düzenle" onclick="randevuDuzenle('19.05.2026','14:00','Mehmet Demir','0555 333 44 55','Yazıcı bakım kontrolü','devam')">✏️</button>
                     <button class="tbl-btn delete" title="Sil">🗑️</button>
                   </td>
                 </tr>
@@ -329,20 +335,63 @@
     </div>
   </div>
 
+  <!-- ===== RANDEVU DÜZENLE MODAL ===== -->
+  <div class="modal-overlay" id="randevuEditModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Randevuyu Düzenle</h2>
+        <button class="modal-close" onclick="document.getElementById('randevuEditModal').classList.remove('open')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Müşteri Adı Soyadı</label>
+          <input type="text" id="editRMusteri" />
+        </div>
+        <div class="form-group">
+          <label>Telefon</label>
+          <input type="tel" id="editRTelefon" />
+        </div>
+        <div class="form-group">
+          <label>Randevu Tarihi</label>
+          <input type="text" id="editRTarih" />
+        </div>
+        <div class="form-group">
+          <label>Randevu Saati</label>
+          <input type="time" id="editRSaat" />
+        </div>
+        <div class="form-group">
+          <label>Durum</label>
+          <select id="editRDurum">
+            <option value="bekliyor">Bekliyor</option>
+            <option value="devam">Devam Ediyor</option>
+            <option value="tamamlandi">Tamamlandı</option>
+            <option value="iptal">İptal</option>
+          </select>
+        </div>
+        <div class="form-group full-width">
+          <label>Randevu Konusu / Notu</label>
+          <textarea id="editRKonu" style="min-height:70px;"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="document.getElementById('randevuEditModal').classList.remove('open')">İptal</button>
+        <button class="btn btn-primary" onclick="document.getElementById('randevuEditModal').classList.remove('open');showToast('Randevu güncellendi!')">Güncelle</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast green" id="r-toast" style="opacity:0;transform:translateY(10px);transition:opacity 0.2s,transform 0.2s;">
+    <span>✅</span><span id="r-toast-msg">İşlem başarılı</span>
+  </div>
+
   <script src="../js/main.js"></script>
   <script>
-
-    function adminToggle() {
-      var s = document.getElementById('adminSubmenu'), c = document.getElementById('adminChevron');
-      s.classList.toggle('acik');
-      c.style.transform = s.classList.contains('acik') ? 'rotate(180deg)' : 'rotate(0deg)';
-    }
     function switchView(view) {
-      var calView  = document.getElementById('calView');
-      var listView = document.getElementById('listView');
+      var calView   = document.getElementById('calView');
+      var listView  = document.getElementById('listView');
       var tabTakvim = document.getElementById('tabTakvim');
       var tabListe  = document.getElementById('tabListe');
-
       if (view === 'takvim') {
         calView.classList.remove('hidden');
         listView.classList.remove('active');
@@ -355,6 +404,30 @@
         tabListe.classList.add('active');
       }
     }
+
+    function randevuDuzenle(tarih, saat, musteri, telefon, konu, durum) {
+      document.getElementById('editRTarih').value   = tarih;
+      document.getElementById('editRSaat').value    = saat;
+      document.getElementById('editRMusteri').value = musteri;
+      document.getElementById('editRTelefon').value = telefon;
+      document.getElementById('editRKonu').value    = konu;
+      document.getElementById('editRDurum').value   = durum;
+      document.getElementById('randevuEditModal').classList.add('open');
+    }
+
+    function showToast(msg) {
+      var t = document.getElementById('r-toast');
+      document.getElementById('r-toast-msg').textContent = msg;
+      t.style.opacity = '1'; t.style.transform = 'translateY(0)';
+      setTimeout(function() { t.style.opacity = '0'; t.style.transform = 'translateY(10px)'; }, 3000);
+    }
+
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('modal-overlay')) e.target.classList.remove('open');
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(function(m) { m.classList.remove('open'); });
+    });
   </script>
 </body>
 </html>

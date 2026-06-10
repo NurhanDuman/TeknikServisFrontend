@@ -59,6 +59,12 @@
           Randevular
         </a>
       </li>
+      <li>
+        <a href="personel-profil.html">
+          <svg class="menu-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profilim
+        </a>
+      </li>
     </ul>
 
     <div class="sidebar-divider"></div>
@@ -104,7 +110,7 @@
       <span class="navbar-title">Teknik Servis Yönetim Paneli</span>
       <div class="navbar-right">
         <span>Personel Paneli</span>
-        <div class="avatar">PP</div>
+        <a href="personel-profil.html" style="text-decoration:none;" title="Profilim"><div class="avatar" style="cursor:pointer;">PP</div></a>
       </div>
     </nav>
 
@@ -207,13 +213,5 @@
   </div>
 
   <script src="../js/main.js"></script>
-  <script>
-    function adminToggle() {
-      var submenu = document.getElementById('adminSubmenu');
-      var chevron = document.getElementById('adminChevron');
-      submenu.classList.toggle('acik');
-      chevron.style.transform = submenu.classList.contains('acik') ? 'rotate(180deg)' : 'rotate(0deg)';
-    }
-  </script>
 </body>
 </html>
