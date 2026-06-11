@@ -7,6 +7,59 @@
   <link rel="stylesheet" href="../css/musteri.css"/>
 <link rel="stylesheet" href="../css/musteri-randevu.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    .user-badge-wrap { position: relative; }
+    .user-badge {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--bg); padding: 8px 14px;
+      border-radius: 40px; border: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+    .user-badge.active,
+    .user-badge:hover { background: #e9edf5; }
+
+    .user-popup {
+      display: none;
+      position: absolute; top: calc(100% + 10px); right: 0;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+      min-width: 220px;
+      z-index: 200;
+      animation: popupIn 0.18s ease;
+      overflow: hidden;
+    }
+    .user-popup.open { display: block; }
+    @keyframes popupIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .user-popup-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px;
+    }
+    .user-popup-avatar {
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, var(--accent), #6366f1);
+      color: #fff; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 700; flex-shrink: 0;
+    }
+    .user-popup-name  { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+    .user-popup-email { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+    .user-popup-divider { height: 1px; background: var(--border); }
+    .user-popup-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 16px;
+      font-size: 13.5px; font-weight: 500;
+      color: var(--text-primary); text-decoration: none;
+      transition: background 0.15s;
+    }
+    .user-popup-item:hover { background: #f5f7fa; }
+    .user-popup-item.danger { color: var(--red); }
+    .user-popup-item.danger:hover { background: #fff0f0; }
+  </style>
 </head>
 <body>
 
@@ -47,14 +100,36 @@
         <h1 class="page-title">Randevularım</h1>
         <p class="page-sub">Aktif randevularınızı görüntüleyin ve yeni randevu alın</p>
       </div>
-      <div class="topbar-right">
-        <a href="profil.html" class="user-badge" style="text-decoration:none; cursor:pointer;">
-          <div class="user-avatar">AK</div>
-          <div class="user-info">
-            <span class="user-name">Ahmet Kaya</span>
-            <span class="user-role">Müşteri</span>
+            <div class="topbar-right">
+        <div class="user-badge-wrap" id="userBadgeWrap">
+          <div class="user-badge" onclick="toggleUserMenu()" id="userBadge" style="cursor:pointer;">
+            <div class="user-avatar">AK</div>
+            <div class="user-info">
+              <span class="user-name">Ahmet Kaya</span>
+              <span class="user-role">Müşteri</span>
+            </div>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:4px;color:#6b7280;"><path d="M6 9l6 6 6-6"/></svg>
           </div>
-        </a>
+          <div class="user-popup" id="userPopup">
+            <div class="user-popup-header">
+              <div class="user-popup-avatar">AK</div>
+              <div>
+                <div class="user-popup-name">Ahmet Kaya</div>
+                <div class="user-popup-email">ahmet.kaya@email.com</div>
+              </div>
+            </div>
+            <div class="user-popup-divider"></div>
+            <a href="profil.html" class="user-popup-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Profilim
+            </a>
+            <div class="user-popup-divider"></div>
+            <a href="../index.html" class="user-popup-item danger">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Çıkış Yap
+            </a>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -220,6 +295,22 @@
         row.style.display = (status === 'hepsi' || row.dataset.status === status) ? 'flex' : 'none';
       });
     }
+  </script>
+
+  <script>
+    function toggleUserMenu() {
+      var popup = document.getElementById('userPopup');
+      var badge = document.getElementById('userBadge');
+      popup.classList.toggle('open');
+      badge.classList.toggle('active');
+    }
+    document.addEventListener('click', function(e) {
+      var wrap = document.getElementById('userBadgeWrap');
+      if (wrap && !wrap.contains(e.target)) {
+        document.getElementById('userPopup').classList.remove('open');
+        document.getElementById('userBadge').classList.remove('active');
+      }
+    });
   </script>
 </body>
 </html>
