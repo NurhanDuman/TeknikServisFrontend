@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Randevularım – ServisTakip</title>
+  <title>Müşteri Paneli – ServisTakip</title>
   <link rel="stylesheet" href="../css/musteri.css"/>
-<link rel="stylesheet" href="../css/musteri-randevu.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     .user-badge-wrap { position: relative; }
@@ -63,14 +62,15 @@
 </head>
 <body>
 
-  <!-- Sidebar (aynı sidebar) -->
+  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="sidebar-brand">
       <span class="brand-servis">Servis</span><span class="brand-takip">Takip</span>
     </div>
+
     <nav class="sidebar-nav">
       <p class="nav-label">ANA MENÜ</p>
-      <a href="musteri.html" class="nav-item">
+      <a href="musteri.html" class="nav-item active">
         <span class="nav-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
         </span> Ana Sayfa
@@ -80,7 +80,7 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
         </span> Servis Kayıtlarım
       </a>
-      <a href="musteri-randevu.html" class="nav-item active">
+      <a href="musteri-randevu.html" class="nav-item">
         <span class="nav-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         </span> Randevularım
@@ -91,16 +91,18 @@
         </span> Profilim
       </a>
     </nav>
+
     <div class="sidebar-footer">v1.0.0 © 2026</div>
   </aside>
 
+  <!-- Main -->
   <div class="main">
     <header class="topbar">
       <div class="topbar-left">
-        <h1 class="page-title">Randevularım</h1>
-        <p class="page-sub">Aktif randevularınızı görüntüleyin ve yeni randevu alın</p>
+        <h1 class="page-title">Müşteri Paneli</h1>
+        <p class="page-sub">Servis geçmişiniz ve aktif talepleriniz</p>
       </div>
-            <div class="topbar-right">
+      <div class="topbar-right">
         <div class="user-badge-wrap" id="userBadgeWrap">
           <div class="user-badge" onclick="toggleUserMenu()" id="userBadge" style="cursor:pointer;">
             <div class="user-avatar">AK</div>
@@ -134,181 +136,109 @@
     </header>
 
     <div class="content">
-
-      <!-- Yeni Randevu Formu -->
-      <div class="card randevu-form-card">
-        <div class="card-header">
-          <h2 class="card-title">Yeni Randevu Al</h2>
+      <!-- Stat Cards -->
+      <div class="stat-grid">
+        <div class="stat-card stat-orange">
+          <div class="stat-info">
+            <p class="stat-label">Bekleyen Servis</p>
+            <p class="stat-value">2</p>
+          </div>
+          <div class="stat-icon-wrap">⏳</div>
         </div>
-
-        <div id="randevu-form" class="randevu-form-body">
-          <div class="form-grid">
-            <div class="form-group">
-              <label>Kategori</label>
-              <select class="form-control">
-                <option value="">Seçiniz...</option>
-                <option>Telefon / Tablet</option>
-                <option>Bilgisayar / Laptop</option>
-                <option>Beyaz Eşya</option>
-                <option>Küçük Ev Aletleri</option>
-                <option>Otomotiv Elektroniği</option>
-                <option>Yazıcı / Tarayıcı</option>
-                <option>Diğer</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Cihaz Türü</label>
-              <select class="form-control">
-                <option value="">Seçiniz...</option>
-                <option>Akıllı Telefon</option>
-                <option>Tablet</option>
-                <option>Dizüstü Bilgisayar</option>
-                <option>Masaüstü Bilgisayar</option>
-                <option>Diğer</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Cihaz Markası / Modeli</label>
-              <input type="text" class="form-control" placeholder="Örn: Samsung Galaxy S22"/>
-            </div>
-            <div class="form-group">
-              <label>Sorun Açıklaması</label>
-              <input type="text" class="form-control" placeholder="Kısa sorun açıklaması"/>
-            </div>
-            <div class="form-group">
-              <label>Randevu Tarihi</label>
-              <input type="date" class="form-control"/>
-            </div>
-            <div class="form-group">
-              <label>Randevu Saati</label>
-              <select class="form-control">
-                <option>09:00</option>
-                <option>09:30</option>
-                <option>10:00</option>
-                <option>10:30</option>
-                <option>11:00</option>
-                <option>11:30</option>
-                <option>13:00</option>
-                <option>13:30</option>
-                <option>14:00</option>
-                <option>14:30</option>
-                <option>15:00</option>
-                <option>15:30</option>
-                <option>16:00</option>
-                <option>16:30</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Servis Noktası</label>
-              <select class="form-control">
-                <option>Servis Merkezi A – Merkez</option>
-                <option>Servis Merkezi B – Nilüfer</option>
-              </select>
-            </div>
+        <div class="stat-card stat-blue">
+          <div class="stat-info">
+            <p class="stat-label">Devam Eden Servis</p>
+            <p class="stat-value">1</p>
           </div>
-
-          <div class="form-group full-width">
-            <label>Ek Notlar (İsteğe Bağlı)</label>
-            <textarea class="form-control" rows="3" placeholder="Cihazla ilgili ekstra bilgi varsa buraya yazabilirsiniz..."></textarea>
+          <div class="stat-icon-wrap">🔄</div>
+        </div>
+        <div class="stat-card stat-green">
+          <div class="stat-info">
+            <p class="stat-label">Tamamlanan</p>
+            <p class="stat-value">5</p>
           </div>
-
-          <div class="form-actions">
-            <button class="btn btn-outline" type="button" onclick="clearForm()">🔄 Sıfırla</button>
-            <button class="btn btn-primary" type="button" onclick="submitRandevu()">
-              📅 Randevu Al
-            </button>
+          <div class="stat-icon-wrap">✅</div>
+        </div>
+        <div class="stat-card stat-purple">
+          <div class="stat-info">
+            <p class="stat-label">Yaklaşan Randevu</p>
+            <p class="stat-value">1</p>
           </div>
+          <div class="stat-icon-wrap">📅</div>
         </div>
       </div>
 
-      <div id="toast" class="toast hidden">
-        ✅ Randevunuz onaylandı! Randevu detayları aşağıda görüntülenmektedir.
-      </div>
-
-      <!-- Randevu Listesi -->
-      <div class="card">
-        <div class="card-header">
-          <h2 class="card-title">Randevularım</h2>
-          <div class="filter-tabs">
-            <button class="filter-tab active" onclick="filterAppts('hepsi', this)">Hepsi</button>
-            <button class="filter-tab" onclick="filterAppts('alindi', this)">Alındı</button>
-            <button class="filter-tab" onclick="filterAppts('iptal', this)">İptal</button>
+      <!-- Son Servisler + Yaklaşan Randevu -->
+      <div class="dashboard-grid">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Son Servis Kayıtlarım</h2>
+            <a href="musteri-servis-kayitlari.html" class="card-link">Tümünü Gör</a>
           </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>İş Emri No</th>
+                <th>Cihaz</th>
+                <th>Durum</th>
+                <th>Tarih</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono">#SRV-0042</td>
+                <td>Samsung Galaxy S22</td>
+                <td><span class="badge badge-warning">Bekliyor</span></td>
+                <td>05.06.2026</td>
+              </tr>
+              <tr>
+                <td class="mono">#SRV-0041</td>
+                <td>MacBook Pro 14"</td>
+                <td><span class="badge badge-info">Devam Ediyor</span></td>
+                <td>03.06.2026</td>
+              </tr>
+              <tr>
+                <td class="mono">#SRV-0038</td>
+                <td>iPhone 15 Pro</td>
+                <td><span class="badge badge-success">Tamamlandı</span></td>
+                <td>20.05.2026</td>
+              </tr>
+              <tr>
+                <td class="mono">#SRV-0035</td>
+                <td>Lenovo ThinkPad</td>
+                <td><span class="badge badge-success">Tamamlandı</span></td>
+                <td>10.05.2026</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
-        <div class="appt-list" id="appt-list">
-          <div class="appt-row" data-status="alindi">
-            <div class="appt-date-col">
+        <div class="side-col">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">Yaklaşan Randevu</h2>
+              <a href="musteri-randevu.html" class="card-link">Tümü</a>
+            </div>
+            <div class="appointment-card">
               <div class="apt-date-block">
-                <span class="apt-day">20</span>
-                <span class="apt-month">MAY</span>
+                <span class="apt-day">12</span>
+                <span class="apt-month">HAZ</span>
               </div>
-              <span class="appt-time">14:00</span>
+              <div class="apt-detail">
+                <p class="apt-title">Samsung Galaxy S22 Ekran</p>
+                <p class="apt-meta">10:30 · Servis Merkezi A</p>
+                <span class="badge badge-warning">Bekliyor</span>
+              </div>
             </div>
-            <div class="appt-info">
-              <p class="appt-device">iPhone 15 Pro – Batarya Değişimi</p>
-              <p class="appt-location">📍 Servis Merkezi A – Merkez</p>
-            </div>
-            <div class="appt-status">
-              <span class="badge badge-success">Alındı</span>
-            </div>
-            <div class="appt-actions-col">
-              <button class="btn btn-sm btn-outline" onclick="cancelAppt(this)">İptal Et</button>
+            <div class="apt-actions">
+              <a href="musteri-randevu.html" class="btn btn-outline btn-sm">Randevu Al</a>
             </div>
           </div>
 
-          <div class="appt-row" data-status="iptal">
-            <div class="appt-date-col">
-              <div class="apt-date-block apt-past">
-                <span class="apt-day">05</span>
-                <span class="apt-month">MAY</span>
-              </div>
-              <span class="appt-time">09:00</span>
-            </div>
-            <div class="appt-info">
-              <p class="appt-device">Lenovo ThinkPad – Genel Bakım</p>
-              <p class="appt-location">📍 Servis Merkezi B – Nilüfer</p>
-            </div>
-            <div class="appt-status">
-              <span class="badge badge-danger">İptal</span>
-            </div>
-            <div class="appt-actions-col">
-              <button class="btn btn-sm btn-outline" disabled>İptal Et</button>
-            </div>
-          </div>
         </div>
       </div>
     </div>
   </div>
-
-  <script>
-    function clearForm() {
-      document.querySelectorAll('#randevu-form input, #randevu-form select, #randevu-form textarea').forEach(el => {
-        if (el.tagName === 'SELECT') el.selectedIndex = 0;
-        else el.value = '';
-      });
-    }
-    function submitRandevu() {
-      const toast = document.getElementById('toast');
-      toast.classList.remove('hidden');
-      setTimeout(() => toast.classList.add('hidden'), 4000);
-    }
-    function cancelAppt(btn) {
-      if (!confirm('Randevuyu iptal etmek istediğinize emin misiniz?')) return;
-      const row = btn.closest('.appt-row');
-      row.querySelector('.appt-status .badge').className = 'badge badge-danger';
-      row.querySelector('.appt-status .badge').textContent = 'İptal';
-      row.dataset.status = 'iptal';
-      btn.disabled = true;
-    }
-    function filterAppts(status, btn) {
-      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-      btn.classList.add('active');
-      document.querySelectorAll('.appt-row').forEach(row => {
-        row.style.display = (status === 'hepsi' || row.dataset.status === status) ? 'flex' : 'none';
-      });
-    }
-  </script>
 
   <script>
     function toggleUserMenu() {

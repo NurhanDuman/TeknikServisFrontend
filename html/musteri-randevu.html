@@ -144,6 +144,19 @@
         <div id="randevu-form" class="randevu-form-body">
           <div class="form-grid">
             <div class="form-group">
+              <label>Kategori</label>
+              <select class="form-control">
+                <option value="">Seçiniz...</option>
+                <option>Telefon / Tablet</option>
+                <option>Bilgisayar / Laptop</option>
+                <option>Beyaz Eşya</option>
+                <option>Küçük Ev Aletleri</option>
+                <option>Otomotiv Elektroniği</option>
+                <option>Yazıcı / Tarayıcı</option>
+                <option>Diğer</option>
+              </select>
+            </div>
+            <div class="form-group">
               <label>Cihaz Türü</label>
               <select class="form-control">
                 <option value="">Seçiniz...</option>
@@ -200,7 +213,7 @@
           </div>
 
           <div class="form-actions">
-            <button class="btn btn-outline" type="button" onclick="clearForm()">İptal</button>
+            <button class="btn btn-outline" type="button" onclick="clearForm()">🔄 Sıfırla</button>
             <button class="btn btn-primary" type="button" onclick="submitRandevu()">
               📅 Randevu Al
             </button>
